@@ -9,12 +9,24 @@
 /* Begin PBXBuildFile section */
 		74CF2E7B254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m in Sources */ = {isa = PBXBuildFile; fileRef = 74CF2E7A254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m */; };
 		9E0819C91D75CABC000C89E6 /* org_cryptomator_macos_keychain_MacKeychain_Native.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0819C71D75CABC000C89E6 /* org_cryptomator_macos_keychain_MacKeychain_Native.m */; };
+		9E21340025542735006EA872 /* org_cryptomator_macos_uiappearance_AppAppearance_Native.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2133FF25542735006EA872 /* org_cryptomator_macos_uiappearance_AppAppearance_Native.m */; };
+		9E2134032554275D006EA872 /* org_cryptomator_macos_uiappearance_MacSystemAppearance_Native.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2134022554275D006EA872 /* org_cryptomator_macos_uiappearance_MacSystemAppearance_Native.m */; };
+		9E21340B255429CA006EA872 /* SKYAppearanceObserver.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E213409255429CA006EA872 /* SKYAppearanceObserver.h */; };
+		9E21340C255429CA006EA872 /* SKYAppearanceObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E21340A255429CA006EA872 /* SKYAppearanceObserver.m */; };
+		9E21341125542ECE006EA872 /* SKYAppearanceNotifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E21340F25542ECE006EA872 /* SKYAppearanceNotifier.h */; };
+		9E21341225542ECE006EA872 /* SKYAppearanceNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E21341025542ECE006EA872 /* SKYAppearanceNotifier.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		74CF2E7A254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = org_cryptomator_macos_autostart_MacLaunchServices_Native.m; sourceTree = "<group>"; };
 		9E0819B71D748ECC000C89E6 /* libIntegrations.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libIntegrations.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E0819C71D75CABC000C89E6 /* org_cryptomator_macos_keychain_MacKeychain_Native.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = org_cryptomator_macos_keychain_MacKeychain_Native.m; sourceTree = "<group>"; };
+		9E2133FF25542735006EA872 /* org_cryptomator_macos_uiappearance_AppAppearance_Native.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = org_cryptomator_macos_uiappearance_AppAppearance_Native.m; sourceTree = "<group>"; };
+		9E2134022554275D006EA872 /* org_cryptomator_macos_uiappearance_MacSystemAppearance_Native.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = org_cryptomator_macos_uiappearance_MacSystemAppearance_Native.m; sourceTree = "<group>"; };
+		9E213409255429CA006EA872 /* SKYAppearanceObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKYAppearanceObserver.h; sourceTree = "<group>"; };
+		9E21340A255429CA006EA872 /* SKYAppearanceObserver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKYAppearanceObserver.m; sourceTree = "<group>"; };
+		9E21340F25542ECE006EA872 /* SKYAppearanceNotifier.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKYAppearanceNotifier.h; sourceTree = "<group>"; };
+		9E21341025542ECE006EA872 /* SKYAppearanceNotifier.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKYAppearanceNotifier.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +45,12 @@
 			children = (
 				9E0819C71D75CABC000C89E6 /* org_cryptomator_macos_keychain_MacKeychain_Native.m */,
 				74CF2E7A254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m */,
+				9E2133FF25542735006EA872 /* org_cryptomator_macos_uiappearance_AppAppearance_Native.m */,
+				9E2134022554275D006EA872 /* org_cryptomator_macos_uiappearance_MacSystemAppearance_Native.m */,
+				9E21340F25542ECE006EA872 /* SKYAppearanceNotifier.h */,
+				9E21341025542ECE006EA872 /* SKYAppearanceNotifier.m */,
+				9E213409255429CA006EA872 /* SKYAppearanceObserver.h */,
+				9E21340A255429CA006EA872 /* SKYAppearanceObserver.m */,
 				9E0819B81D748ECC000C89E6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -52,6 +70,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E21341125542ECE006EA872 /* SKYAppearanceNotifier.h in Headers */,
+				9E21340B255429CA006EA872 /* SKYAppearanceObserver.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,7 +133,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				74CF2E7B254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m in Sources */,
+				9E21340C255429CA006EA872 /* SKYAppearanceObserver.m in Sources */,
+				9E21340025542735006EA872 /* org_cryptomator_macos_uiappearance_AppAppearance_Native.m in Sources */,
+				9E21341225542ECE006EA872 /* SKYAppearanceNotifier.m in Sources */,
 				9E0819C91D75CABC000C89E6 /* org_cryptomator_macos_keychain_MacKeychain_Native.m in Sources */,
+				9E2134032554275D006EA872 /* org_cryptomator_macos_uiappearance_MacSystemAppearance_Native.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
