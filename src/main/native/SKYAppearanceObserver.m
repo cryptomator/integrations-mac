@@ -24,7 +24,6 @@
 }
 
 - (void)interfaceThemeChangedNotification:(NSNotification *)notification {
-    printf("interface changed");
     JNIEnv *env = NULL;
     if ((*self.vm)->GetEnv(self.vm, (void **)&env, JNI_VERSION_10) == JNI_EDETACHED) {
         (*self.vm)->AttachCurrentThread(self.vm, (void **)&env, NULL);
