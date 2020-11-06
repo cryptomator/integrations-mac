@@ -15,6 +15,7 @@
 		9E21340C255429CA006EA872 /* SKYAppearanceObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E21340A255429CA006EA872 /* SKYAppearanceObserver.m */; };
 		9E21341125542ECE006EA872 /* SKYAppearanceNotifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E21340F25542ECE006EA872 /* SKYAppearanceNotifier.h */; };
 		9E21341225542ECE006EA872 /* SKYAppearanceNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E21341025542ECE006EA872 /* SKYAppearanceNotifier.m */; };
+		9EACB1B425557865000F3214 /* org_cryptomator_macos_tray_ActivationPolicy_Native.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EACB1B325557865000F3214 /* org_cryptomator_macos_tray_ActivationPolicy_Native.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		9E21340A255429CA006EA872 /* SKYAppearanceObserver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKYAppearanceObserver.m; sourceTree = "<group>"; };
 		9E21340F25542ECE006EA872 /* SKYAppearanceNotifier.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKYAppearanceNotifier.h; sourceTree = "<group>"; };
 		9E21341025542ECE006EA872 /* SKYAppearanceNotifier.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKYAppearanceNotifier.m; sourceTree = "<group>"; };
+		9EACB1B325557865000F3214 /* org_cryptomator_macos_tray_ActivationPolicy_Native.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = org_cryptomator_macos_tray_ActivationPolicy_Native.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,8 +45,9 @@
 		9E0819AE1D748ECC000C89E6 = {
 			isa = PBXGroup;
 			children = (
-				9E0819C71D75CABC000C89E6 /* org_cryptomator_macos_keychain_MacKeychain_Native.m */,
 				74CF2E7A254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m */,
+				9E0819C71D75CABC000C89E6 /* org_cryptomator_macos_keychain_MacKeychain_Native.m */,
+				9EACB1B325557865000F3214 /* org_cryptomator_macos_tray_ActivationPolicy_Native.m */,
 				9E2133FF25542735006EA872 /* org_cryptomator_macos_uiappearance_AppAppearance_Native.m */,
 				9E2134022554275D006EA872 /* org_cryptomator_macos_uiappearance_MacSystemAppearance_Native.m */,
 				9E21340F25542ECE006EA872 /* SKYAppearanceNotifier.h */,
@@ -132,6 +135,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9EACB1B425557865000F3214 /* org_cryptomator_macos_tray_ActivationPolicy_Native.m in Sources */,
 				74CF2E7B254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m in Sources */,
 				9E21340C255429CA006EA872 /* SKYAppearanceObserver.m in Sources */,
 				9E21340025542735006EA872 /* org_cryptomator_macos_uiappearance_AppAppearance_Native.m in Sources */,
