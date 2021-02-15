@@ -32,6 +32,11 @@ public class MacSystemKeychainAccess implements KeychainAccessProvider {
 	}
 
 	@Override
+	public boolean isLocked() {
+		return false;
+	}
+
+	@Override
 	public void deletePassphrase(String key) throws KeychainAccessException {
 		keychain.deletePassword(key);
 	}
