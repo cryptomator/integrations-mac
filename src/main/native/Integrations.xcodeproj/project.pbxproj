@@ -267,7 +267,9 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = "/Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home/include/**";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = ../headers;
 			};
 			name = Debug;
 		};
@@ -277,7 +279,9 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = "/Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home/include/**";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = ../headers;
 			};
 			name = Release;
 		};
