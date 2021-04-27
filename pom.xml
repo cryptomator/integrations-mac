@@ -174,7 +174,7 @@
 								<argument>-quiet</argument>
 								<argument>clean</argument>
 								<argument>archive</argument>
-								<argument>HEADER_SEARCH_PATHS="${java.home}/include/**"</argument>
+								<argument>JAVA_HOME="${java.home}"</argument>
 							</arguments>
 						</configuration>
 					</execution>
