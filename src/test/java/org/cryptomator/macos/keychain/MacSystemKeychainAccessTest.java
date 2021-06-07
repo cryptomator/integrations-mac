@@ -19,6 +19,14 @@ public class MacSystemKeychainAccessTest {
 	}
 
 	@Test
+	@DisplayName("displayName() does not return default name")
+	public void testDisplayName() {
+		var displayName = keychainAccess.displayName();
+
+		Assertions.assertNotEquals(keychainAccess.getClass().getSimpleName(), displayName);
+	}
+
+	@Test
 	@DisplayName("storePassphrase() succeeds")
 	public void testStoreSuccess() throws KeychainAccessException {
 		keychainAccess.storePassphrase("key", "pass");
