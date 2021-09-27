@@ -197,14 +197,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"/Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home/include/**",
-					../headers,
-				);
+				HEADER_SEARCH_PATHS = "$(JAVA_HOME)/include/**";
+				JAVA_HOME = "/Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = ../headers;
 			};
 			name = Debug;
 		};
@@ -251,13 +250,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"/Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home/include/**",
-					../headers,
-				);
+				HEADER_SEARCH_PATHS = "$(JAVA_HOME)/include/**";
+				JAVA_HOME = "/Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = ../headers;
 			};
 			name = Release;
 		};

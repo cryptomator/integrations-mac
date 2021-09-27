@@ -2,6 +2,7 @@ package org.cryptomator.macos.keychain;
 
 import org.cryptomator.integrations.keychain.KeychainAccessException;
 import org.cryptomator.integrations.keychain.KeychainAccessProvider;
+import org.cryptomator.macos.common.Localization;
 
 public class MacSystemKeychainAccess implements KeychainAccessProvider {
 
@@ -14,6 +15,11 @@ public class MacSystemKeychainAccess implements KeychainAccessProvider {
 	// visible for testing
 	MacSystemKeychainAccess(MacKeychain keychain) {
 		this.keychain = keychain;
+	}
+
+	@Override
+	public String displayName() {
+		return Localization.get().getString("org.cryptomator.macos.keychain.displayName");
 	}
 
 	@Override
