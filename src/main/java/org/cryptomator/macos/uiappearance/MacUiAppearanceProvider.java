@@ -1,5 +1,7 @@
 package org.cryptomator.macos.uiappearance;
 
+import org.cryptomator.integrations.common.OperatingSystem;
+import org.cryptomator.integrations.common.Priority;
 import org.cryptomator.integrations.uiappearance.Theme;
 import org.cryptomator.integrations.uiappearance.UiAppearanceException;
 import org.cryptomator.integrations.uiappearance.UiAppearanceListener;
@@ -8,6 +10,8 @@ import org.cryptomator.integrations.uiappearance.UiAppearanceProvider;
 import java.util.HashMap;
 import java.util.Map;
 
+@Priority(1000)
+@OperatingSystem(OperatingSystem.Value.MAC)
 public class MacUiAppearanceProvider implements UiAppearanceProvider {
 
 	private final MacSystemAppearance systemAppearance;
