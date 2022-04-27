@@ -5,7 +5,7 @@ import org.cryptomator.integrations.uiappearance.UiAppearanceListener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class MacUiAppearanceProviderTest {
+public class MacUiAppearanceProviderTest {
 
 	private MacUiAppearanceProvider appearanceProvider;
 

@@ -2,7 +2,11 @@ package org.cryptomator.macos.autostart;
 
 import org.cryptomator.integrations.autostart.AutoStartProvider;
 import org.cryptomator.integrations.autostart.ToggleAutoStartFailedException;
+import org.cryptomator.integrations.common.OperatingSystem;
+import org.cryptomator.integrations.common.Priority;
 
+@Priority(1000)
+@OperatingSystem(OperatingSystem.Value.MAC)
 public class MacAutoStartProvider implements AutoStartProvider {
 
 	private final MacLaunchServices launchServices;

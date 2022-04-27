@@ -1,9 +1,13 @@
 package org.cryptomator.macos.keychain;
 
+import org.cryptomator.integrations.common.OperatingSystem;
+import org.cryptomator.integrations.common.Priority;
 import org.cryptomator.integrations.keychain.KeychainAccessException;
 import org.cryptomator.integrations.keychain.KeychainAccessProvider;
 import org.cryptomator.macos.common.Localization;
 
+@Priority(1000)
+@OperatingSystem(OperatingSystem.Value.MAC)
 public class MacSystemKeychainAccess implements KeychainAccessProvider {
 
 	private final MacKeychain keychain;
@@ -23,7 +27,7 @@ public class MacSystemKeychainAccess implements KeychainAccessProvider {
 	}
 
 	@Override
-	public void storePassphrase(String key, CharSequence passphrase) throws KeychainAccessException {
+	public void storePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException {
 		keychain.storePassword(key, passphrase);
 	}
 
@@ -48,7 +52,7 @@ public class MacSystemKeychainAccess implements KeychainAccessProvider {
 	}
 
 	@Override
-	public void changePassphrase(String key, CharSequence passphrase) throws KeychainAccessException {
+	public void changePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException {
 		if (keychain.deletePassword(key)) {
 			keychain.storePassword(key, passphrase);
 		}
