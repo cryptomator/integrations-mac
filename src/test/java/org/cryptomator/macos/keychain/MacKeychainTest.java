@@ -2,25 +2,48 @@ package org.cryptomator.macos.keychain;
 
 import org.cryptomator.integrations.keychain.KeychainAccessException;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 public class MacKeychainTest {
 
-	@Test
-	public void testKeychainAccess() throws KeychainAccessException {
-		MacKeychain keychain = new MacKeychain();
+	private final MacKeychain keychain = new MacKeychain();
 
-		String storedPw = "h€llo wørld123";
-		keychain.storePassword("foo", storedPw);
-		char[] loadedPw2 = keychain.loadPassword("bar");
-		Assertions.assertNull(loadedPw2);
+	@Nested
+	public class WithStoredPassword {
 
-		char[] loadedPw = keychain.loadPassword("foo");
-		Assertions.assertArrayEquals(storedPw.toCharArray(), loadedPw);
+		private final String storedPw = "h€llo wørld123";
 
-		keychain.deletePassword("foo");
-		char[] deletedPw = keychain.loadPassword("foo");
-		Assertions.assertNull(deletedPw);
+		@BeforeEach
+		public void setup() throws KeychainAccessException {
+			keychain.storePassword("service", "account", storedPw);
+		}
+
+		@Test
+		public void testLoadWithInvalidAccount() {
+			char[] loadedPw = keychain.loadPassword("service", "wrong");
+			Assertions.assertNull(loadedPw);
+		}
+
+		@Test
+		public void testLoadWithInvalidService() {
+			char[] loadedPw = keychain.loadPassword("wrong", "account");
+			Assertions.assertNull(loadedPw);
+		}
+
+		@Test
+		public void testLoad() {
+			char[] loadedPw = keychain.loadPassword("service", "account");
+			Assertions.assertArrayEquals(storedPw.toCharArray(), loadedPw);
+		}
+
+		@Test
+		public void testDelete() {
+			Assertions.assertDoesNotThrow(() -> keychain.deletePassword("service", "account"));
+			char[] deletedPw = keychain.loadPassword("service", "account");
+			Assertions.assertNull(deletedPw);
+		}
 	}
 
 }
