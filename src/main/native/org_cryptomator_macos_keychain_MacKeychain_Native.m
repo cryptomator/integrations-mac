@@ -11,7 +11,7 @@
 
 JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_storePassword(JNIEnv *env, jobject thisObj, jbyteArray service, jbyteArray key, jbyteArray password) {
 	const int serviceLen = (*env)->GetArrayLength(env, service);
-    jbyte *serviceStr = (*env)->GetByteArrayElements(env, service, NULL);
+	jbyte *serviceStr = (*env)->GetByteArrayElements(env, service, NULL);
 	const int keyLen = (*env)->GetArrayLength(env, key);
 	jbyte *keyStr = (*env)->GetByteArrayElements(env, key, NULL);
 	const int pwLen = (*env)->GetArrayLength(env, password);
@@ -41,8 +41,8 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
 		// add new:
 		status = SecKeychainAddGenericPassword(
 		    NULL,                // default keychain
-            serviceLen,          // length of service name
-            (char *)serviceStr,  // service name
+		    serviceLen,          // length of service name
+		    (char *)serviceStr,  // service name
 		    keyLen,              // length of account name
 		    (char *)keyStr,      // account name
 		    pwLen,               // length of password
@@ -61,7 +61,7 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
 
 JNIEXPORT jbyteArray JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_loadPassword(JNIEnv *env, jobject thisObj, jbyteArray service, jbyteArray key) {
 	const int serviceLen = (*env)->GetArrayLength(env, service);
-    jbyte *serviceStr = (*env)->GetByteArrayElements(env, service, NULL);
+	jbyte *serviceStr = (*env)->GetByteArrayElements(env, service, NULL);
 	const int keyLen = (*env)->GetArrayLength(env, key);
 	jbyte *keyStr = (*env)->GetByteArrayElements(env, key, NULL);
 	void *pwStr = NULL;
@@ -94,7 +94,7 @@ JNIEXPORT jbyteArray JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_000
 
 JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_deletePassword(JNIEnv *env, jobject thisObj, jbyteArray service, jbyteArray key) {
 	const int serviceLen = (*env)->GetArrayLength(env, service);
-    jbyte *serviceStr = (*env)->GetByteArrayElements(env, service, NULL);
+	jbyte *serviceStr = (*env)->GetByteArrayElements(env, service, NULL);
 	const int keyLen = (*env)->GetArrayLength(env, key);
 	jbyte *keyStr = (*env)->GetByteArrayElements(env, key, NULL);
 	SecKeychainItemRef itemRef = NULL;
