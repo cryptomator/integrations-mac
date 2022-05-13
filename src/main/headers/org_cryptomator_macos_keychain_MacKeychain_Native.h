@@ -10,26 +10,26 @@ extern "C" {
 /*
  * Class:     org_cryptomator_macos_keychain_MacKeychain_Native
  * Method:    storePassword
- * Signature: ([B[B)I
+ * Signature: ([B[B[B)I
  */
 JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_storePassword
-  (JNIEnv *, jobject, jbyteArray, jbyteArray);
+  (JNIEnv *, jobject, jbyteArray, jbyteArray, jbyteArray);
 
 /*
  * Class:     org_cryptomator_macos_keychain_MacKeychain_Native
  * Method:    loadPassword
- * Signature: ([B)[B
+ * Signature: ([B[B)[B
  */
 JNIEXPORT jbyteArray JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_loadPassword
-  (JNIEnv *, jobject, jbyteArray);
+  (JNIEnv *, jobject, jbyteArray, jbyteArray);
 
 /*
  * Class:     org_cryptomator_macos_keychain_MacKeychain_Native
  * Method:    deletePassword
- * Signature: ([B)I
+ * Signature: ([B[B)I
  */
 JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_deletePassword
-  (JNIEnv *, jobject, jbyteArray);
+  (JNIEnv *, jobject, jbyteArray, jbyteArray);
 
 #ifdef __cplusplus
 }

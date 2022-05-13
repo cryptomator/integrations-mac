@@ -6,9 +6,17 @@ import org.cryptomator.integrations.keychain.KeychainAccessException;
 import org.cryptomator.integrations.keychain.KeychainAccessProvider;
 import org.cryptomator.macos.common.Localization;
 
+/**
+ * Stores passwords in the macOS system keychain.
+ * <p>
+ * Items are stored in the default keychain with the service name <code>Cryptomator</code>, unless configured otherwise
+ * using the system property <code>cryptomator.integrationsMac.keychainServiceName</code>.
+ */
 @Priority(1000)
 @OperatingSystem(OperatingSystem.Value.MAC)
 public class MacSystemKeychainAccess implements KeychainAccessProvider {
+
+	private static final String SERVICE_NAME = System.getProperty("cryptomator.integrationsMac.keychainServiceName", "Cryptomator");
 
 	private final MacKeychain keychain;
 
@@ -28,12 +36,12 @@ public class MacSystemKeychainAccess implements KeychainAccessProvider {
 
 	@Override
 	public void storePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException {
-		keychain.storePassword(key, passphrase);
+		keychain.storePassword(SERVICE_NAME, key, passphrase);
 	}
 
 	@Override
 	public char[] loadPassphrase(String key) {
-		return keychain.loadPassword(key);
+		return keychain.loadPassword(SERVICE_NAME, key);
 	}
 
 	@Override
@@ -48,13 +56,13 @@ public class MacSystemKeychainAccess implements KeychainAccessProvider {
 
 	@Override
 	public void deletePassphrase(String key) throws KeychainAccessException {
-		keychain.deletePassword(key);
+		keychain.deletePassword(SERVICE_NAME, key);
 	}
 
 	@Override
 	public void changePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException {
-		if (keychain.deletePassword(key)) {
-			keychain.storePassword(key, passphrase);
+		if (keychain.deletePassword(SERVICE_NAME, key)) {
+			keychain.storePassword(SERVICE_NAME, key, passphrase);
 		}
 	}
 
