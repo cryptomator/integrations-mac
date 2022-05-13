@@ -17,14 +17,16 @@ class MacKeychain {
 	/**
 	 * Associates the specified password with the specified key in the system keychain.
 	 *
+	 * @param serviceName Service name
 	 * @param account Unique account identifier
 	 * @param password Passphrase to store
+	 * @see <a href="https://developer.apple.com/documentation/security/1398366-seckeychainaddgenericpassword">SecKeychainAddGenericPassword</a>
 	 */
-	public void storePassword(String account, CharSequence password) throws KeychainAccessException {
+	public void storePassword(String serviceName, String account, CharSequence password) throws KeychainAccessException {
 		ByteBuffer pwBuf = UTF_8.encode(CharBuffer.wrap(password));
 		byte[] pwBytes = new byte[pwBuf.remaining()];
 		pwBuf.get(pwBytes);
-		int errorCode = Native.INSTANCE.storePassword(account.getBytes(UTF_8), pwBytes);
+		int errorCode = Native.INSTANCE.storePassword(serviceName.getBytes(UTF_8), account.getBytes(UTF_8), pwBytes);
 		Arrays.fill(pwBytes, (byte) 0x00);
 		Arrays.fill(pwBuf.array(), (byte) 0x00);
 		if (errorCode != OSSTATUS_SUCCESS) {
@@ -35,11 +37,13 @@ class MacKeychain {
 	/**
 	 * Loads the password associated with the specified key from the system keychain.
 	 *
+	 * @param serviceName Service name
 	 * @param account Unique account identifier
 	 * @return password or <code>null</code> if no such keychain entry could be loaded from the keychain.
+	 * @see <a href="https://developer.apple.com/documentation/security/1397301-seckeychainfindgenericpassword">SecKeychainFindGenericPassword</a>
 	 */
-	public char[] loadPassword(String account) {
-		byte[] pwBytes = Native.INSTANCE.loadPassword(account.getBytes(UTF_8));
+	public char[] loadPassword(String serviceName, String account) {
+		byte[] pwBytes = Native.INSTANCE.loadPassword(serviceName.getBytes(UTF_8), account.getBytes(UTF_8));
 		if (pwBytes == null) {
 			return null;
 		} else {
@@ -55,11 +59,14 @@ class MacKeychain {
 	/**
 	 * Deletes the password associated with the specified key from the system keychain.
 	 *
+	 * @param serviceName Service name
 	 * @param account Unique account identifier
 	 * @return <code>true</code> if the passwords has been deleted, <code>false</code> if no entry for the given key exists.
+	 * @see <a href="https://developer.apple.com/documentation/security/1395547-secitemdelete">SecKeychainItemDelete</a>
+
 	 */
-	public boolean deletePassword(String account) throws KeychainAccessException {
-		int errorCode = Native.INSTANCE.deletePassword(account.getBytes(UTF_8));
+	public boolean deletePassword(String serviceName, String account) throws KeychainAccessException {
+		int errorCode = Native.INSTANCE.deletePassword(serviceName.getBytes(UTF_8), account.getBytes(UTF_8));
 		if (errorCode == OSSTATUS_SUCCESS) {
 			return true;
 		} else if (errorCode == OSSTATUS_NOT_FOUND) {
@@ -77,11 +84,11 @@ class MacKeychain {
 			NativeLibLoader.loadLib();
 		}
 
-		public native int storePassword(byte[] account, byte[] value);
+		public native int storePassword(byte[] service, byte[] account, byte[] value);
 
-		public native byte[] loadPassword(byte[] account);
+		public native byte[] loadPassword(byte[] service, byte[] account);
 
-		public native int deletePassword(byte[] account);
+		public native int deletePassword(byte[] service, byte[] account);
 	}
 
 }
