@@ -18,8 +18,8 @@ class MacKeychain {
 	 * Associates the specified password with the specified key in the system keychain.
 	 *
 	 * @param serviceName Service name
-	 * @param account Unique account identifier
-	 * @param password Passphrase to store
+	 * @param account     Unique account identifier
+	 * @param password    Passphrase to store
 	 * @see <a href="https://developer.apple.com/documentation/security/1398366-seckeychainaddgenericpassword">SecKeychainAddGenericPassword</a>
 	 */
 	public void storePassword(String serviceName, String account, CharSequence password) throws KeychainAccessException {
@@ -38,13 +38,18 @@ class MacKeychain {
 	 * Loads the password associated with the specified key from the system keychain.
 	 *
 	 * @param serviceName Service name
-	 * @param account Unique account identifier
+	 * @param account     Unique account identifier
 	 * @return password or <code>null</code> if no such keychain entry could be loaded from the keychain.
 	 * @see <a href="https://developer.apple.com/documentation/security/1397301-seckeychainfindgenericpassword">SecKeychainFindGenericPassword</a>
 	 */
 	public char[] loadPassword(String serviceName, String account) {
 		byte[] pwBytes = Native.INSTANCE.loadPassword(serviceName.getBytes(UTF_8), account.getBytes(UTF_8));
 		if (pwBytes == null) {
+			// this if-statement is a workaround for https://github.com/cryptomator/integrations-mac/issues/13:
+			if ("Cryptomator".equals(serviceName) && tryMigratePassword(account)) {
+				// on success: retry
+				return loadPassword(serviceName, account);
+			}
 			return null;
 		} else {
 			CharBuffer pwBuf = UTF_8.decode(ByteBuffer.wrap(pwBytes));
@@ -57,13 +62,35 @@ class MacKeychain {
 	}
 
 	/**
+	 * Fix for <a href="https://github.com/cryptomator/integrations-mac/issues/13">Issue 13</a>.
+	 * Attempts to find the account with the old hard-coded service name 'Cryptomator\0'
+	 *
+	 * @param account Unique account identifier
+	 * @return <code>true</code> on success
+	 */
+	private boolean tryMigratePassword(String account) {
+		byte[] oldServiceName = {'C', 'r', 'y', 'p', 't', 'o', 'm', 'a', 't', 'o', 'r', '\0'};
+		byte[] newServiceName = {'C', 'r', 'y', 'p', 't', 'o', 'm', 'a', 't', 'o', 'r'};
+		byte[] pwBytes = Native.INSTANCE.loadPassword(oldServiceName, account.getBytes(UTF_8));
+		if (pwBytes == null) {
+			return false;
+		}
+		int errorCode = Native.INSTANCE.storePassword(newServiceName, account.getBytes(UTF_8), pwBytes);
+		Arrays.fill(pwBytes, (byte) 0x00);
+		if (errorCode != OSSTATUS_SUCCESS) {
+			return false;
+		}
+		Native.INSTANCE.deletePassword(oldServiceName, account.getBytes(UTF_8));
+		return true;
+	}
+
+	/**
 	 * Deletes the password associated with the specified key from the system keychain.
 	 *
 	 * @param serviceName Service name
-	 * @param account Unique account identifier
+	 * @param account     Unique account identifier
 	 * @return <code>true</code> if the passwords has been deleted, <code>false</code> if no entry for the given key exists.
 	 * @see <a href="https://developer.apple.com/documentation/security/1395547-secitemdelete">SecKeychainItemDelete</a>
-
 	 */
 	public boolean deletePassword(String serviceName, String account) throws KeychainAccessException {
 		int errorCode = Native.INSTANCE.deletePassword(serviceName.getBytes(UTF_8), account.getBytes(UTF_8));
