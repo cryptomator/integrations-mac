@@ -11,6 +11,7 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Priority(100)
 @OperatingSystem(OperatingSystem.Value.MAC)
@@ -22,10 +23,13 @@ public class OpenCmdRevealPathService implements RevealPathService {
 			var attrs = Files.readAttributes(p, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
 			ProcessBuilder pb = new ProcessBuilder().command("open", attrs.isDirectory() ? "" : "-R", p.toString());
 			var process = pb.start();
-			if (process.waitFor(5000, TimeUnit.MILLISECONDS)) {
-				int exitValue = process.exitValue();
-				if (process.exitValue() != 0) {
-					throw new RevealFailedException("open command exited with value " + exitValue);
+			try (var reader = process.errorReader()) {
+				if (process.waitFor(5000, TimeUnit.MILLISECONDS)) {
+					int exitValue = process.exitValue();
+					if (process.exitValue() != 0) {
+						String error = reader.lines().collect(Collectors.joining());
+						throw new RevealFailedException("open command exited with value " + exitValue + " and error message: " + error);
+					}
 				}
 			}
 		} catch (IOException e) {
