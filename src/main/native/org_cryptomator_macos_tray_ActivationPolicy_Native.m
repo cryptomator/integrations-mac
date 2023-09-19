@@ -11,11 +11,15 @@
 
 JNIEXPORT void JNICALL Java_org_cryptomator_macos_tray_ActivationPolicy_00024Native_transformToAccessory
 (JNIEnv *env, jobject thisObj) {
-    [NSApp setActivationPolicy:NSApplicationActivationPolicyAccessory];
+	if (NSApp.activationPolicy != NSApplicationActivationPolicyAccessory) {
+		[NSApp setActivationPolicy:NSApplicationActivationPolicyAccessory];
+	}
 }
 
 JNIEXPORT void JNICALL Java_org_cryptomator_macos_tray_ActivationPolicy_00024Native_transformToRegular
 (JNIEnv *env, jobject thisObj) {
-    [NSApp activateIgnoringOtherApps:YES];
-    [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
+	if (NSApp.activationPolicy != NSApplicationActivationPolicyRegular) {
+		[NSApp activateIgnoringOtherApps:YES];
+		[NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
+	}
 }
