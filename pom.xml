@@ -9,11 +9,11 @@
 
 	<name>Cryptomator Integrations for macOS</name>
 	<description>Provides optional macOS services used by Cryptomator</description>
-	<url>https://github.com/cryptomator/integrations-mac</url>
+	<url>https://github.com/purejava/integrations-mac</url>
 	<scm>
-		<connection>scm:git:git@github.com:cryptomator/integrations-mac.git</connection>
-		<developerConnection>scm:git:git@github.com:cryptomator/integrations-mac.git</developerConnection>
-		<url>git@github.com:cryptomator/integrations-mac.git</url>
+		<connection>scm:git:git@github.com:purejava/integrations-mac.git</connection>
+		<developerConnection>scm:git:git@github.com:purejava/integrations-mac.git</developerConnection>
+		<url>git@github.com:purejava/integrations-mac.git</url>
 	</scm>
 	<developers>
 		<developer>
@@ -398,7 +398,7 @@
 				<repository>
 					<id>github</id>
 					<name>GitHub Packages</name>
-					<url>https://maven.pkg.github.com/cryptomator/integrations-mac</url>
+					<url>https://maven.pkg.github.com/purejava/integrations-mac</url>
 				</repository>
 			</distributionManagement>
 			<build>
