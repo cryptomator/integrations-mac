@@ -16,6 +16,8 @@ module org.cryptomator.integrations.mac {
 	requires org.slf4j;
 	requires com.sun.jna;
 
+	exports org.cryptomator.macos.secondfactor; // required for CryptomatorTouchID.AuthCallback
+
 	provides AutoStartProvider with MacAutoStartProvider;
 	provides KeychainAccessProvider with MacSystemKeychainAccess;
 	provides RevealPathService with OpenCmdRevealPathService;
