@@ -16,16 +16,16 @@ int32_t touchid_supported(void) {
 }
 
 void touchid_authenticate(const char* msg, auth_cb_t callback) {
-    NSLog(@"Authenticate with biometrics");
+    NSLog(@"Authenticate with biometrics or password");
     NSString* reason = [NSString stringWithCString:msg encoding:NSUTF8StringEncoding];
-    [[LAContext new] evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics
+    [[LAContext new] evaluatePolicy:LAPolicyDeviceOwnerAuthentication
                     localizedReason:reason
                               reply:^(BOOL success, NSError * _Nullable error) {
         if (success) {
-            NSLog(@"Successfully authenticated with biometrics");
+            NSLog(@"Successfully authenticated");
             callback(YES, 0);
         } else {
-            NSLog(@"Biometric authentication failed: %@", error);
+            NSLog(@"Authentication failed: %@", error);
             callback(NO, (int32_t)error.code);
         }
     }];
