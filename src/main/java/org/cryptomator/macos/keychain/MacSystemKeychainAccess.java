@@ -1,10 +1,14 @@
 package org.cryptomator.macos.keychain;
 
+import com.sun.jna.Native;
 import org.cryptomator.integrations.common.OperatingSystem;
 import org.cryptomator.integrations.common.Priority;
 import org.cryptomator.integrations.keychain.KeychainAccessException;
 import org.cryptomator.integrations.keychain.KeychainAccessProvider;
 import org.cryptomator.macos.common.Localization;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.util.Arrays;
 
 /**
  * Stores passwords in the macOS system keychain.
@@ -16,17 +20,15 @@ import org.cryptomator.macos.common.Localization;
 @OperatingSystem(OperatingSystem.Value.MAC)
 public class MacSystemKeychainAccess implements KeychainAccessProvider {
 
+	private static final Logger LOG = LoggerFactory.getLogger(MacSystemKeychainAccess.class);
 	private static final String SERVICE_NAME = System.getProperty("cryptomator.integrationsMac.keychainServiceName", "Cryptomator");
 
-	private final MacKeychain keychain;
+	private static final int OSSTATUS_SUCCESS = 0;
+	private static final int OSSTATUS_NOT_FOUND = -25300;
+	private static final MacSystemKeychain NATIVELIB;
 
-	public MacSystemKeychainAccess() {
-		this(new MacKeychain());
-	}
-
-	// visible for testing
-	MacSystemKeychainAccess(MacKeychain keychain) {
-		this.keychain = keychain;
+	static {
+		NATIVELIB = Native.load("MacSystemKeychain", MacSystemKeychain.class);
 	}
 
 	@Override
@@ -36,16 +38,20 @@ public class MacSystemKeychainAccess implements KeychainAccessProvider {
 
 	@Override
 	public void storePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException {
-		keychain.storePassword(SERVICE_NAME, key, passphrase);
+		var errorCode =  NATIVELIB.addItemToKeychain(SERVICE_NAME, key, passphrase.toString());
+		if (errorCode != OSSTATUS_SUCCESS) {
+			throw new KeychainAccessException("Failed to store password. Error code " + errorCode);
+		}
 	}
 
 	@Override
 	public char[] loadPassphrase(String key) {
-		return keychain.loadPassword(SERVICE_NAME, key);
+		return NATIVELIB.getItemFromKeychain(SERVICE_NAME, key).toCharArray();
 	}
 
 	@Override
 	public boolean isSupported() {
+		LOG.info("is supported called");
 		return true;
 	}
 
@@ -56,14 +62,20 @@ public class MacSystemKeychainAccess implements KeychainAccessProvider {
 
 	@Override
 	public void deletePassphrase(String key) throws KeychainAccessException {
-		keychain.deletePassword(SERVICE_NAME, key);
+		var errorCode = NATIVELIB.deleteItemFromKeychain(SERVICE_NAME, key);
+		if (errorCode == OSSTATUS_SUCCESS) {
+			LOG.debug("Password successfully deleted");
+		} else if (errorCode == OSSTATUS_NOT_FOUND) {
+			LOG.debug("Password was not deleted");
+		} else {
+			throw new KeychainAccessException("Failed to delete password. Error code " + errorCode);
+		}
 	}
 
 	@Override
 	public void changePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException {
-		if (keychain.deletePassword(SERVICE_NAME, key)) {
-			keychain.storePassword(SERVICE_NAME, key, passphrase);
-		}
+		deletePassphrase(key);
+		storePassphrase(key, displayName, passphrase);
 	}
 
 }

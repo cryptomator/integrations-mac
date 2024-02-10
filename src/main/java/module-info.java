@@ -12,6 +12,7 @@ import org.cryptomator.macos.uiappearance.MacUiAppearanceProvider;
 module org.cryptomator.integrations.mac {
 	requires org.cryptomator.integrations.api;
 	requires org.slf4j;
+	requires com.sun.jna;
 
 	provides AutoStartProvider with MacAutoStartProvider;
 	provides KeychainAccessProvider with MacSystemKeychainAccess;
