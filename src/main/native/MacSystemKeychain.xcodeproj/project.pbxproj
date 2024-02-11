@@ -12,6 +12,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CA9CE2A52B792B2700A45E37 /* MacSystemKeychain.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacSystemKeychain.entitlements; sourceTree = "<group>"; };
 		CAA3E92A2B77C5CC00A6549E /* libMacSystemKeychain.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libMacSystemKeychain.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAA3E92D2B77C5CC00A6549E /* MacSystemKeychain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MacSystemKeychain.h; sourceTree = "<group>"; };
 		CAA3E92F2B77C5CC00A6549E /* MacSystemKeychain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MacSystemKeychain.m; sourceTree = "<group>"; };
@@ -39,7 +40,7 @@
 		CAA3E92B2B77C5CC00A6549E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CAA3E92A2B77C5CC00A6549E /* libMacSystemKeychain.dylib */,
+				CAA3E92A2B77C5CC00A6549E /* MacSystemKeychain.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -47,6 +48,7 @@
 		CAA3E92C2B77C5CC00A6549E /* MacSystemKeychain */ = {
 			isa = PBXGroup;
 			children = (
+				CA9CE2A52B792B2700A45E37 /* MacSystemKeychain.entitlements */,
 				CAA3E92D2B77C5CC00A6549E /* MacSystemKeychain.h */,
 				CAA3E92F2B77C5CC00A6549E /* MacSystemKeychain.m */,
 			);
@@ -81,7 +83,7 @@
 			);
 			name = MacSystemKeychain;
 			productName = MacSystemKeychain;
-			productReference = CAA3E92A2B77C5CC00A6549E /* libMacSystemKeychain.dylib */;
+			productReference = CAA3E92A2B77C5CC00A6549E /* MacSystemKeychain.app */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
 /* End PBXNativeTarget section */
@@ -246,12 +248,16 @@
 		CAA3E9342B77C5CC00A6549E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = MacSystemKeychain/MacSystemKeychain.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = AC7BAYY98P;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
 				INSTALL_PATH = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_BUNDLE_IDENTIFIER = Cryptomator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
 			};
@@ -260,12 +266,16 @@
 		CAA3E9352B77C5CC00A6549E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = MacSystemKeychain/MacSystemKeychain.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = AC7BAYY98P;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
 				INSTALL_PATH = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_BUNDLE_IDENTIFIER = Cryptomator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
 			};
