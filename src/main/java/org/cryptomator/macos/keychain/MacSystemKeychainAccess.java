@@ -46,7 +46,8 @@ public class MacSystemKeychainAccess implements KeychainAccessProvider {
 
 	@Override
 	public char[] loadPassphrase(String key) {
-		return NATIVELIB.getItemFromKeychain(SERVICE_NAME, key).toCharArray();
+		String i = NATIVELIB.getItemFromKeychain(SERVICE_NAME, key);
+		return null != i ? i.toCharArray() : null;
 	}
 
 	@Override
