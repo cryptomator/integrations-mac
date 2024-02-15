@@ -5,17 +5,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 public class MacSystemKeychainAccessTest {
 
-	private MacKeychain keychain;
 	private MacSystemKeychainAccess keychainAccess;
 
 	@BeforeEach
 	public void setup() {
-		keychain = Mockito.mock(MacKeychain.class);
-		keychainAccess = new MacSystemKeychainAccess(keychain);
+		keychainAccess = new MacSystemKeychainAccess();
 	}
 
 	@Test
@@ -28,39 +25,33 @@ public class MacSystemKeychainAccessTest {
 
 	@Test
 	@DisplayName("storePassphrase() succeeds")
-	public void testStoreSuccess() throws KeychainAccessException {
-		keychainAccess.storePassphrase("key", "pass");
-
-		Mockito.verify(keychain).storePassword("Cryptomator", "key", "pass");
+	public void testStoreSuccess() {
+		Assertions.assertDoesNotThrow(() -> keychainAccess.storePassphrase("key", "displayName", "pass"));
 	}
 
 	@Test
 	@DisplayName("storePassphrase() fails")
-	public void testStoreError() throws KeychainAccessException {
+	public void testStoreError() {
 		KeychainAccessException e = new KeychainAccessException("fail.");
-		Mockito.doThrow(e).when(keychain).storePassword(Mockito.eq("Cryptomator"), Mockito.any(), Mockito.any());
 
 		KeychainAccessException thrown = Assertions.assertThrows(KeychainAccessException.class, () -> {
-			keychainAccess.storePassphrase("key", "pass");
+			keychainAccess.storePassphrase("key", "displayName", "pass");
 		});
-		Assertions.assertSame(thrown, e);
+
+		Assertions.assertSame(e, thrown.getMessage());
 	}
 
 	@Test
 	@DisplayName("loadPassphrase() succeeds")
 	public void testLoadSuccess() {
-		Mockito.when(keychain.loadPassword("Cryptomator", "key")).thenReturn("pass".toCharArray());
-
 		char[] result = keychainAccess.loadPassphrase("key");
 
 		Assertions.assertArrayEquals("pass".toCharArray(), result);
 	}
 
 	@Test
-	@DisplayName("loadPassphrase() doesn't find pw")
+	@DisplayName("loadPassphrase() does find pw")
 	public void testLoadNotFound() {
-		Mockito.when(keychain.loadPassword("Cryptomator", "key")).thenReturn(null);
-
 		char[] result = keychainAccess.loadPassphrase("key");
 
 		Assertions.assertNull(result);
@@ -68,53 +59,39 @@ public class MacSystemKeychainAccessTest {
 
 	@Test
 	@DisplayName("deletePassphrase() succeeds")
-	public void testDeleteSuccess() throws KeychainAccessException {
-		keychainAccess.deletePassphrase("key");
-
-		Mockito.verify(keychain).deletePassword("Cryptomator", "key");
+	public void testDeleteSuccess() {
+		Assertions.assertDoesNotThrow(() -> keychainAccess.deletePassphrase("key"));
 	}
 
 	@Test
 	@DisplayName("deletePassphrase() fails")
-	public void testDeleteError() throws KeychainAccessException {
+	public void testDeleteError() {
 		KeychainAccessException e = new KeychainAccessException("fail.");
-		Mockito.doThrow(e).when(keychain).deletePassword(Mockito.eq("Cryptomator"), Mockito.any());
 
 		KeychainAccessException thrown = Assertions.assertThrows(KeychainAccessException.class, () -> {
 			keychainAccess.deletePassphrase("key");
 		});
-		Assertions.assertSame(thrown, e);
+
+		Assertions.assertSame(e, thrown.getMessage());
 	}
 
 	@Test
 	@DisplayName("changePassphrase() succeeds")
 	public void testChangeSuccess() throws KeychainAccessException {
-		Mockito.when(keychain.deletePassword("Cryptomator", "key")).thenReturn(true);
+		keychainAccess.storePassphrase("key", "displayName", "pass");
 
-		keychainAccess.changePassphrase("key", "newpass");
-
-		Mockito.verify(keychain).storePassword("Cryptomator", "key", "newpass");
-	}
-
-	@Test
-	@DisplayName("changePassphrase() doesn't find pw")
-	public void testChangeNotFound() throws KeychainAccessException {
-		Mockito.when(keychain.deletePassword("Cryptomator", "key")).thenReturn(false);
-
-		keychainAccess.changePassphrase("key", "newpass");
-
-		Mockito.verify(keychain, Mockito.never()).storePassword("Cryptomator", "key", "newpass");
+		Assertions.assertDoesNotThrow(() -> keychainAccess.changePassphrase("key", "displayName", "newpass"));
 	}
 
 	@Test
 	@DisplayName("changePassphrase() fails")
 	public void testChangeError() throws KeychainAccessException {
+		keychainAccess.deletePassphrase("key");
 		KeychainAccessException e = new KeychainAccessException("fail.");
-		Mockito.doThrow(e).when(keychain).deletePassword(Mockito.eq("Cryptomator"), Mockito.any());
-
 		KeychainAccessException thrown = Assertions.assertThrows(KeychainAccessException.class, () -> {
-			keychainAccess.changePassphrase("key", "newpass");
+			keychainAccess.changePassphrase("key", "displayName", "newpass");
 		});
+
 		Assertions.assertSame(thrown, e);
 	}
 
