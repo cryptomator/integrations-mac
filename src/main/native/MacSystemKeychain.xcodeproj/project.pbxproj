@@ -251,7 +251,7 @@
 				CODE_SIGN_ENTITLEMENTS = MacSystemKeychain/MacSystemKeychain.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = AC7BAYY98P;
+				DEVELOPMENT_TEAM = YZQJQUHA3L;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
@@ -269,7 +269,7 @@
 				CODE_SIGN_ENTITLEMENTS = MacSystemKeychain/MacSystemKeychain.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = AC7BAYY98P;
+				DEVELOPMENT_TEAM = YZQJQUHA3L;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
