@@ -39,6 +39,9 @@ static void migrateSharedFileListLoginItem(void) {
 
 JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_autostart_MacLaunchServices_00024Native_isLoginItemEnabled(JNIEnv *env, jobject thisObj) {
     if (@available(macOS 13, *)) {
+        if ([[SMAppService mainAppService] status] == SMAppServiceStatusEnabled) {
+            return YES;
+        }
         migrateSharedFileListLoginItem();
         return [[SMAppService mainAppService] status] == SMAppServiceStatusEnabled ? YES : NO;
     } else { // macOS < 13
