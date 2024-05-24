@@ -12,7 +12,7 @@
 
 JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_autostart_MacLaunchServices_00024Native_isLoginItemEnabled(JNIEnv *env, jobject thisObj) {
     if (@available(macOS 13, *)) {
-        return YES;
+        return [[SMAppService mainAppService] status] == SMAppServiceStatusEnabled ? YES : NO;
     } else { // macOS < 13
         LSSharedFileListRef sharedFileList = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
         NSString *applicationPath = NSBundle.mainBundle.bundlePath;
