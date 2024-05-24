@@ -37,23 +37,23 @@ JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_autostart_MacLaunchService
 }
 
 JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_autostart_MacLaunchServices_00024Native_enableLoginItem(JNIEnv *env, jobject thisObj) {
-	NSString *applicationPath = NSBundle.mainBundle.bundlePath;
-	BOOL *success = SMLoginItemSetEnabled((__bridge CFStringRef)applicationPath, YES);
-	if (success) {
-		return YES;
-	} else {
-		NSLog(@"Unable to enable login item.");
-		return NO;
-	}
+	NSError* error = nil;
+    if (![[SMAppService mainAppService] registerAndReturnError: & error]) {
+        NSLog(@"Failed to add login item: %@", error.localizedDescription);
+        return NO;
+    } else {
+        NSLog(@"Successfully added login item");
+        return YES;
+    }
 }
 
 JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_autostart_MacLaunchServices_00024Native_disableLoginItem(JNIEnv *env, jobject thisObj) {
-	NSString *applicationPath = NSBundle.mainBundle.bundlePath;
-	BOOL *success = SMLoginItemSetEnabled((__bridge CFStringRef)applicationPath, NO);
-	if (success) {
-		return YES;
-	} else {
-		NSLog(@"Unable to disable login item.");
-		return NO;
-	}
+	NSError* error = nil;
+    if (![[SMAppService mainAppService] unregisterAndReturnError: & error]) {
+        NSLog(@"Failed to remove login item: %@", error.localizedDescription);
+        return NO;
+     } else {
+        NSLog(@"Successfully removed login item");
+        return YES;
+    }
 }
