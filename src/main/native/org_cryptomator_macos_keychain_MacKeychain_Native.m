@@ -12,7 +12,7 @@
 
 // the kServiceName must be the same as in the project settings > Keychain Sharing > Keychain Groups
 
-SecAccessControlRef createAccessControl(void) {
+static SecAccessControlRef createAccessControl(void) {
     SecAccessControlCreateFlags flags = kSecAccessControlUserPresence;
     
     SecAccessControlRef accessControl = SecAccessControlCreateWithFlags(
@@ -29,6 +29,7 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
 	jbyte *serviceStr = (*env)->GetByteArrayElements(env, service, NULL);
 	jbyte *keyStr = (*env)->GetByteArrayElements(env, key, NULL);
 	jbyte *pwStr = (*env)->GetByteArrayElements(env, password, NULL);
+	jsize length = (*env)->GetArrayLength(env, password);
 
 	// find existing:
     NSDictionary *searchAttributes = @{
@@ -48,7 +49,7 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
 
         // update existing:
         NSDictionary *changeAttributes = @{
-            (__bridge id)kSecValueData:  [NSString stringWithCString:(char *)pwStr encoding:NSUTF8StringEncoding]
+            (__bridge id)kSecValueData: [NSData dataWithBytes:pwStr length:length]
         };
 
         status = SecItemUpdate((__bridge CFDictionaryRef)searchAttributes, (__bridge CFDictionaryRef)changeAttributes);
@@ -60,9 +61,9 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
             NSDictionary *keychainAttributes = @{
                 (__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
                 (__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
-                (__bridge id)kSecAttrAccessControl: (__bridge_transfer id)createAccessControl(),
+                //(__bridge id)kSecAttrAccessControl: (__bridge_transfer id)createAccessControl(),
                 (__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
-                (__bridge id)kSecValueData:  [NSString stringWithCString:(char *)pwStr encoding:NSUTF8StringEncoding]
+                (__bridge id)kSecValueData: [NSData dataWithBytes:pwStr length:length]
             };
 
             status = SecItemAdd((__bridge CFDictionaryRef)keychainAttributes, NULL);
@@ -71,6 +72,7 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
             NSLog(@"Error storing item in keychain. Status code: %d", (int)status);
         }
 
+    (*env)->ReleaseByteArrayElements(env, service, serviceStr, JNI_ABORT);
     (*env)->ReleaseByteArrayElements(env, key, keyStr, JNI_ABORT);
     (*env)->ReleaseByteArrayElements(env, password, pwStr, JNI_ABORT);
 
@@ -82,18 +84,19 @@ JNIEXPORT jbyteArray JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_000
 	jbyte *keyStr = (*env)->GetByteArrayElements(env, key, NULL);
 
     // Create a dictionary of search attributes to find the item in the keychain
-        NSDictionary *searchAttributes = @{
-            (__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
-            (__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
-            (__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
-            (__bridge id)kSecReturnAttributes: @YES,
-            (__bridge id)kSecReturnData: @YES,
-            (__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne
-        };
+    NSDictionary *searchAttributes = @{
+        (__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
+        (__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
+        (__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
+        (__bridge id)kSecReturnAttributes: @YES,
+        (__bridge id)kSecReturnData: @YES,
+        (__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne
+    };
         
-        CFDictionaryRef result = NULL;
-        OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)searchAttributes, (CFTypeRef *)&result);
+    CFDictionaryRef result = NULL;
+    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)searchAttributes, (CFTypeRef *)&result);
 
+    (*env)->ReleaseByteArrayElements(env, service, serviceStr, JNI_ABORT);
     (*env)->ReleaseByteArrayElements(env, key, keyStr, JNI_ABORT);
 
     if (status == errSecSuccess && result != NULL) {
@@ -145,6 +148,7 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
             NSLog(@"Error deleting item from keychain. Status code: %d", (int)status);
         }
 
+    (*env)->ReleaseByteArrayElements(env, service, serviceStr, JNI_ABORT);
     (*env)->ReleaseByteArrayElements(env, key, keyStr, JNI_ABORT);
 
     return status;
