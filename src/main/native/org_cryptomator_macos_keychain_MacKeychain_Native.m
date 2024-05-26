@@ -17,7 +17,7 @@ static SecAccessControlRef createAccessControl(void) {
     
     SecAccessControlRef accessControl = SecAccessControlCreateWithFlags(
         kCFAllocatorDefault,
-        kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly,
+        kSecAttrAccessibleWhenUnlocked,
         flags,
         NULL // Ignore any error
     );
