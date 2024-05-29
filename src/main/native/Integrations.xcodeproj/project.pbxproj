@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		74BEF1852C0384FB006731AC /* SKYLaunchService.m in Sources */ = {isa = PBXBuildFile; fileRef = 74BEF1842C0384FB006731AC /* SKYLaunchService.m */; };
+		74BEF1862C0384FB006731AC /* SKYLaunchService.h in Headers */ = {isa = PBXBuildFile; fileRef = 74BEF1832C0384FB006731AC /* SKYLaunchService.h */; };
 		74CF2E7B254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m in Sources */ = {isa = PBXBuildFile; fileRef = 74CF2E7A254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m */; };
 		9E0819C91D75CABC000C89E6 /* org_cryptomator_macos_keychain_MacKeychain_Native.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0819C71D75CABC000C89E6 /* org_cryptomator_macos_keychain_MacKeychain_Native.m */; };
 		9E21340025542735006EA872 /* org_cryptomator_macos_uiappearance_AppAppearance_Native.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2133FF25542735006EA872 /* org_cryptomator_macos_uiappearance_AppAppearance_Native.m */; };
@@ -19,6 +21,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		74BEF1832C0384FB006731AC /* SKYLaunchService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKYLaunchService.h; sourceTree = "<group>"; };
+		74BEF1842C0384FB006731AC /* SKYLaunchService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKYLaunchService.m; sourceTree = "<group>"; };
 		74CF2E7A254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = org_cryptomator_macos_autostart_MacLaunchServices_Native.m; sourceTree = "<group>"; };
 		9E0819B71D748ECC000C89E6 /* libIntegrations.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libIntegrations.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E0819C71D75CABC000C89E6 /* org_cryptomator_macos_keychain_MacKeychain_Native.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = org_cryptomator_macos_keychain_MacKeychain_Native.m; sourceTree = "<group>"; };
@@ -54,6 +58,8 @@
 				9E21341025542ECE006EA872 /* SKYAppearanceNotifier.m */,
 				9E213409255429CA006EA872 /* SKYAppearanceObserver.h */,
 				9E21340A255429CA006EA872 /* SKYAppearanceObserver.m */,
+				74BEF1832C0384FB006731AC /* SKYLaunchService.h */,
+				74BEF1842C0384FB006731AC /* SKYLaunchService.m */,
 				9E0819B81D748ECC000C89E6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -74,6 +80,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E21341125542ECE006EA872 /* SKYAppearanceNotifier.h in Headers */,
+				74BEF1862C0384FB006731AC /* SKYLaunchService.h in Headers */,
 				9E21340B255429CA006EA872 /* SKYAppearanceObserver.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -135,6 +142,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				74BEF1852C0384FB006731AC /* SKYLaunchService.m in Sources */,
 				9EACB1B425557865000F3214 /* org_cryptomator_macos_tray_ActivationPolicy_Native.m in Sources */,
 				74CF2E7B254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m in Sources */,
 				9E21340C255429CA006EA872 /* SKYAppearanceObserver.m in Sources */,

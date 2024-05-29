@@ -7,72 +7,16 @@
 //
 
 #import "org_cryptomator_macos_autostart_MacLaunchServices_Native.h"
-#import <Foundation/Foundation.h>
+#import "SKYLaunchService.h"
 
 JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_autostart_MacLaunchServices_00024Native_isLoginItemEnabled(JNIEnv *env, jobject thisObj) {
-	LSSharedFileListRef sharedFileList = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
-	NSString *applicationPath = NSBundle.mainBundle.bundlePath;
-	if (sharedFileList) {
-		UInt32 seedValue;
-		NSArray *sharedFileListArray = CFBridgingRelease(LSSharedFileListCopySnapshot(sharedFileList, &seedValue));
-		for (id sharedFile in sharedFileListArray) {
-			LSSharedFileListItemRef sharedFileListItem = (__bridge LSSharedFileListItemRef)sharedFile;
-			CFURLRef applicationPathURL = NULL;
-			LSSharedFileListItemResolve(sharedFileListItem, 0, (CFURLRef *)&applicationPathURL, NULL);
-			if (applicationPathURL != NULL) {
-				NSString *resolvedApplicationPath = [(__bridge NSURL *)applicationPathURL path];
-				CFRelease(applicationPathURL);
-				if ([resolvedApplicationPath compare:applicationPath] == NSOrderedSame) {
-					CFRelease(sharedFileList);
-					return YES;
-				}
-			}
-		}
-		CFRelease(sharedFileList);
-	} else {
-		NSLog(@"Unable to create the shared file list.");
-	}
-	return NO;
+	return [SKYLaunchService isLoginItemEnabled];
 }
 
 JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_autostart_MacLaunchServices_00024Native_enableLoginItem(JNIEnv *env, jobject thisObj) {
-	LSSharedFileListRef sharedFileList = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
-	NSString *applicationPath = NSBundle.mainBundle.bundlePath;
-	NSURL *applicationPathURL = [NSURL fileURLWithPath:applicationPath];
-	if (sharedFileList) {
-		LSSharedFileListItemRef sharedFileListItem = LSSharedFileListInsertItemURL(sharedFileList, kLSSharedFileListItemLast, NULL, NULL, (__bridge CFURLRef)applicationPathURL, NULL, NULL);
-		if (sharedFileListItem) {
-			CFRelease(sharedFileListItem);
-		}
-		CFRelease(sharedFileList);
-		return YES;
-	} else {
-		NSLog(@"Unable to create the shared file list.");
-		return NO;
-	}
+	return [SKYLaunchService enableLoginItem];
 }
 
 JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_autostart_MacLaunchServices_00024Native_disableLoginItem(JNIEnv *env, jobject thisObj) {
-	LSSharedFileListRef sharedFileList = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
-	NSString *applicationPath = NSBundle.mainBundle.bundlePath;
-	if (sharedFileList) {
-		UInt32 seedValue;
-		NSArray *sharedFileListArray = CFBridgingRelease(LSSharedFileListCopySnapshot(sharedFileList, &seedValue));
-		for (id sharedFile in sharedFileListArray) {
-			LSSharedFileListItemRef sharedFileListItem = (__bridge LSSharedFileListItemRef)sharedFile;
-			CFURLRef applicationPathURL;
-			if (LSSharedFileListItemResolve(sharedFileListItem, 0, &applicationPathURL, NULL) == noErr) {
-				NSString *resolvedApplicationPath = [(__bridge NSURL *)applicationPathURL path];
-				if ([resolvedApplicationPath compare:applicationPath] == NSOrderedSame) {
-					LSSharedFileListItemRemove(sharedFileList, sharedFileListItem);
-				}
-				CFRelease(applicationPathURL);
-			}
-		}
-		CFRelease(sharedFileList);
-		return YES;
-	} else {
-		NSLog(@"Unable to create the shared file list.");
-		return NO;
-	}
+	return [SKYLaunchService disableLoginItem];
 }
