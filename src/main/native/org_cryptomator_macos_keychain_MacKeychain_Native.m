@@ -17,112 +17,112 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
 	jsize length = (*env)->GetArrayLength(env, password);
 
 	// find existing:
-    NSDictionary *searchAttributes = @{
-        (__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
-        (__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
-        (__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
-        (__bridge id)kSecReturnAttributes: @YES,
-        (__bridge id)kSecReturnData: @YES,
-        (__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne
-    };
-        
-    CFDictionaryRef result = NULL;
-    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)searchAttributes, (CFTypeRef *)&result);
+	NSDictionary *searchAttributes = @{
+		(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
+		(__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
+		(__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
+		(__bridge id)kSecReturnAttributes: @YES,
+		(__bridge id)kSecReturnData: @YES,
+		(__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne
+	};
 
-    if (status == errSecSuccess && result != NULL) {
-        // update existing:
-        NSDictionary *changeAttributes = @{
-            (__bridge id)kSecValueData: [NSData dataWithBytes:pwStr length:length]
-        };
+	CFDictionaryRef result = NULL;
+	OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)searchAttributes, (CFTypeRef *)&result);
 
-        status = SecItemUpdate((__bridge CFDictionaryRef)searchAttributes, (__bridge CFDictionaryRef)changeAttributes);
+	if (status == errSecSuccess && result != NULL) {
+		// update existing:
+		NSDictionary *changeAttributes = @{
+			(__bridge id)kSecValueData: [NSData dataWithBytes:pwStr length:length]
+		};
 
-        } else if (status == errSecItemNotFound) {
-            // add new:
-            NSDictionary *keychainAttributes = @{
-                (__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
-                (__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
-                (__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
-                (__bridge id)kSecValueData: [NSData dataWithBytes:pwStr length:length]
-            };
+		status = SecItemUpdate((__bridge CFDictionaryRef)searchAttributes, (__bridge CFDictionaryRef)changeAttributes);
 
-            status = SecItemAdd((__bridge CFDictionaryRef)keychainAttributes, NULL);
+	} else if (status == errSecItemNotFound) {
+		// add new:
+		NSDictionary *keychainAttributes = @{
+			(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
+			(__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
+			(__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
+			(__bridge id)kSecValueData: [NSData dataWithBytes:pwStr length:length]
+		};
 
-        } else {
-            NSLog(@"Error storing item in keychain. Status code: %d", (int)status);
-        }
+		status = SecItemAdd((__bridge CFDictionaryRef)keychainAttributes, NULL);
 
-    (*env)->ReleaseByteArrayElements(env, service, serviceStr, JNI_ABORT);
-    (*env)->ReleaseByteArrayElements(env, key, keyStr, JNI_ABORT);
-    (*env)->ReleaseByteArrayElements(env, password, pwStr, JNI_ABORT);
+	} else {
+		NSLog(@"Error storing item in keychain. Status code: %d", (int)status);
+	}
 
-    return status;
+	(*env)->ReleaseByteArrayElements(env, service, serviceStr, JNI_ABORT);
+	(*env)->ReleaseByteArrayElements(env, key, keyStr, JNI_ABORT);
+	(*env)->ReleaseByteArrayElements(env, password, pwStr, JNI_ABORT);
+
+	return status;
 }
 
 JNIEXPORT jbyteArray JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_loadPassword(JNIEnv *env, jobject thisObj, jbyteArray service, jbyteArray key) {
 	jbyte *serviceStr = (*env)->GetByteArrayElements(env, service, NULL);
 	jbyte *keyStr = (*env)->GetByteArrayElements(env, key, NULL);
 
-    // Create a dictionary of search attributes to find the item in the keychain
-    NSDictionary *searchAttributes = @{
-        (__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
-        (__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
-        (__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
-        (__bridge id)kSecReturnAttributes: @YES,
-        (__bridge id)kSecReturnData: @YES,
-        (__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne
-    };
-        
-    CFDictionaryRef result = NULL;
-    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)searchAttributes, (CFTypeRef *)&result);
+	// Create a dictionary of search attributes to find the item in the keychain
+	NSDictionary *searchAttributes = @{
+		(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
+		(__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
+		(__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
+		(__bridge id)kSecReturnAttributes: @YES,
+		(__bridge id)kSecReturnData: @YES,
+		(__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne
+	};
+						
+	CFDictionaryRef result = NULL;
+	OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)searchAttributes, (CFTypeRef *)&result);
 
-    (*env)->ReleaseByteArrayElements(env, service, serviceStr, JNI_ABORT);
-    (*env)->ReleaseByteArrayElements(env, key, keyStr, JNI_ABORT);
+	(*env)->ReleaseByteArrayElements(env, service, serviceStr, JNI_ABORT);
+	(*env)->ReleaseByteArrayElements(env, key, keyStr, JNI_ABORT);
 
-    if (status == errSecSuccess && result != NULL) {
-            NSDictionary *attributes = (__bridge_transfer NSDictionary *)result;
-            NSData *passwordData = attributes[(__bridge id)kSecValueData];
+	if (status == errSecSuccess && result != NULL) {
+		NSDictionary *attributes = (__bridge_transfer NSDictionary *)result;
+		NSData *passwordData = attributes[(__bridge id)kSecValueData];
 
-            NSUInteger pwLen = [passwordData length];
-            const void *pwBytes = [passwordData bytes];
+		NSUInteger pwLen = [passwordData length];
+		const void *pwBytes = [passwordData bytes];
 
-            jbyteArray password = (*env)->NewByteArray(env, (int)pwLen);
-            (*env)->SetByteArrayRegion(env, password, 0, (int)pwLen, (jbyte *)pwBytes);
+		jbyteArray password = (*env)->NewByteArray(env, (int)pwLen);
+		(*env)->SetByteArrayRegion(env, password, 0, (int)pwLen, (jbyte *)pwBytes);
 
-            return password;
+		return password;
 
-        } else if (status != errSecItemNotFound) {
-            NSLog(@"Error retrieving item from keychain. Status code: %d", (int)status);
-        }
+	} else if (status != errSecItemNotFound) {
+		NSLog(@"Error retrieving item from keychain. Status code: %d", (int)status);
+	}
 
-    return NULL; // empty
+	return NULL; // empty
 }
 
 JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_deletePassword(JNIEnv *env, jobject thisObj, jbyteArray service, jbyteArray key) {
-    jbyte *serviceStr = (*env)->GetByteArrayElements(env, service, NULL);
-    jbyte *keyStr = (*env)->GetByteArrayElements(env, key, NULL);
+	jbyte *serviceStr = (*env)->GetByteArrayElements(env, service, NULL);
+	jbyte *keyStr = (*env)->GetByteArrayElements(env, key, NULL);
 
-    // find existing:
-    NSDictionary *searchAttributes = @{
-        (__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
-        (__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
-        (__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
-        (__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne
-    };
-        
-    CFDictionaryRef result = NULL;
-    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)searchAttributes, (CFTypeRef *)&result);
+	// find existing:
+	NSDictionary *searchAttributes = @{
+		(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
+		(__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
+		(__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
+		(__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne
+	};
+								
+	CFDictionaryRef result = NULL;
+	OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)searchAttributes, (CFTypeRef *)&result);
 
-    if (status == errSecSuccess && result != NULL) {
+	if (status == errSecSuccess && result != NULL) {
 
-        status = SecItemDelete((__bridge CFDictionaryRef)searchAttributes);
+		status = SecItemDelete((__bridge CFDictionaryRef)searchAttributes);
 
-        } else if (status != errSecItemNotFound) {
-            NSLog(@"Error deleting item from keychain. Status code: %d", (int)status);
-        }
+	} else if (status != errSecItemNotFound) {
+		NSLog(@"Error deleting item from keychain. Status code: %d", (int)status);
+	}
 
-    (*env)->ReleaseByteArrayElements(env, service, serviceStr, JNI_ABORT);
-    (*env)->ReleaseByteArrayElements(env, key, keyStr, JNI_ABORT);
+	(*env)->ReleaseByteArrayElements(env, service, serviceStr, JNI_ABORT);
+	(*env)->ReleaseByteArrayElements(env, key, keyStr, JNI_ABORT);
 
-    return status;
+	return status;
 }
