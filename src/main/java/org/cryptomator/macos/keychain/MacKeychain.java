@@ -34,6 +34,18 @@ class MacKeychain {
 		}
 	}
 
+	public void storePassphraseForAuthenticatedUser(String serviceName, String account, CharSequence password) throws KeychainAccessException {
+		ByteBuffer pwBuf = UTF_8.encode(CharBuffer.wrap(password));
+		byte[] pwBytes = new byte[pwBuf.remaining()];
+		pwBuf.get(pwBytes);
+		int errorCode = Native.INSTANCE.storePasswordForAuthenticatedUser(serviceName.getBytes(UTF_8), account.getBytes(UTF_8), pwBytes);
+		Arrays.fill(pwBytes, (byte) 0x00);
+		Arrays.fill(pwBuf.array(), (byte) 0x00);
+		if (errorCode != OSSTATUS_SUCCESS) {
+			throw new KeychainAccessException("Failed to store password. Error code " + errorCode);
+		}
+	}
+
 	/**
 	 * Loads the password associated with the specified key from the system keychain.
 	 *
@@ -112,6 +124,8 @@ class MacKeychain {
 		}
 
 		public native int storePassword(byte[] service, byte[] account, byte[] value);
+
+		public native int storePasswordForAuthenticatedUser(byte[] service, byte[] account, byte[] value);
 
 		public native byte[] loadPassword(byte[] service, byte[] account);
 

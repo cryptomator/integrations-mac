@@ -40,6 +40,11 @@ public class MacSystemKeychainAccess implements KeychainAccessProvider {
 	}
 
 	@Override
+	public void storePassphraseForAuthenticatedUser(String key, String displayName, CharSequence passphrase) throws KeychainAccessException {
+		keychain.storePassphraseForAuthenticatedUser(SERVICE_NAME, key, passphrase);
+	}
+
+	@Override
 	public char[] loadPassphrase(String key) {
 		return keychain.loadPassword(SERVICE_NAME, key);
 	}
