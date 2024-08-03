@@ -169,12 +169,8 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
 		(__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
 		(__bridge id)kSecUseAuthenticationContext: context
 	};
-	CFDictionaryRef result = NULL;
-	OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef *)&result);
-	if (status == errSecSuccess && result != NULL) {
-		// delete:
-		status = SecItemDelete((__bridge CFDictionaryRef)query);
-	} else if (status != errSecItemNotFound) {
+	OSStatus status = SecItemDelete((__bridge CFDictionaryRef)query);
+	if (status != errSecSuccess) {
 		NSLog(@"Error deleting item from keychain. Status code: %d", (int)status);
 	}
 
