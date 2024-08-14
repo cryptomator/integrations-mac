@@ -17,7 +17,7 @@ public class MacKeychainTest {
 
 		@BeforeEach
 		public void setup() throws KeychainAccessException {
-			keychain.storePassword("service", "account", storedPw);
+			keychain.storePassword("service", "account", storedPw, false);
 		}
 
 		@Test

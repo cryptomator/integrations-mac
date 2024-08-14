@@ -17,28 +17,17 @@ class MacKeychain {
 	/**
 	 * Associates the specified password with the specified key in the system keychain.
 	 *
-	 * @param serviceName Service name
-	 * @param account     Unique account identifier
-	 * @param password    Passphrase to store
+	 * @param serviceName 			  Service name
+	 * @param account     			  Unique account identifier
+	 * @param password    			  Passphrase to store
+	 * @param requireOsAuthentication Defines, whether the user needs to authenticate to store a passphrase
 	 * @see <a href="https://developer.apple.com/documentation/security/1398366-seckeychainaddgenericpassword">SecKeychainAddGenericPassword</a>
 	 */
-	public void storePassword(String serviceName, String account, CharSequence password) throws KeychainAccessException {
+	public void storePassword(String serviceName, String account, CharSequence password, boolean requireOsAuthentication) throws KeychainAccessException {
 		ByteBuffer pwBuf = UTF_8.encode(CharBuffer.wrap(password));
 		byte[] pwBytes = new byte[pwBuf.remaining()];
 		pwBuf.get(pwBytes);
-		int errorCode = Native.INSTANCE.storePassword(serviceName.getBytes(UTF_8), account.getBytes(UTF_8), pwBytes);
-		Arrays.fill(pwBytes, (byte) 0x00);
-		Arrays.fill(pwBuf.array(), (byte) 0x00);
-		if (errorCode != OSSTATUS_SUCCESS) {
-			throw new KeychainAccessException("Failed to store password. Error code " + errorCode);
-		}
-	}
-
-	public void storePassphraseForAuthenticatedUser(String serviceName, String account, CharSequence password) throws KeychainAccessException {
-		ByteBuffer pwBuf = UTF_8.encode(CharBuffer.wrap(password));
-		byte[] pwBytes = new byte[pwBuf.remaining()];
-		pwBuf.get(pwBytes);
-		int errorCode = Native.INSTANCE.storePasswordForAuthenticatedUser(serviceName.getBytes(UTF_8), account.getBytes(UTF_8), pwBytes);
+		int errorCode = Native.INSTANCE.storePassword(serviceName.getBytes(UTF_8), account.getBytes(UTF_8), pwBytes, requireOsAuthentication);
 		Arrays.fill(pwBytes, (byte) 0x00);
 		Arrays.fill(pwBuf.array(), (byte) 0x00);
 		if (errorCode != OSSTATUS_SUCCESS) {
@@ -87,7 +76,7 @@ class MacKeychain {
 		if (pwBytes == null) {
 			return false;
 		}
-		int errorCode = Native.INSTANCE.storePassword(newServiceName, account.getBytes(UTF_8), pwBytes);
+		int errorCode = Native.INSTANCE.storePassword(newServiceName, account.getBytes(UTF_8), pwBytes, false);
 		Arrays.fill(pwBytes, (byte) 0x00);
 		if (errorCode != OSSTATUS_SUCCESS) {
 			return false;
@@ -123,9 +112,7 @@ class MacKeychain {
 			NativeLibLoader.loadLib();
 		}
 
-		public native int storePassword(byte[] service, byte[] account, byte[] value);
-
-		public native int storePasswordForAuthenticatedUser(byte[] service, byte[] account, byte[] value);
+		public native int storePassword(byte[] service, byte[] account, byte[] value, boolean requireOsAuthentication);
 
 		public native byte[] loadPassword(byte[] service, byte[] account);
 
