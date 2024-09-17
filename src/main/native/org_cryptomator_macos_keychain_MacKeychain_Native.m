@@ -46,24 +46,24 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
 	if (requireOsAuthentication) {
 		LAContext *context = getSharedLAContext();
 
-        query = @{
-        	(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
-        	(__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
-        	(__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
-        	(__bridge id)kSecReturnAttributes: @YES,
-        	(__bridge id)kSecReturnData: @YES,
-        	(__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne,
-        	(__bridge id)kSecUseAuthenticationContext: context
-        };
+		query = @{
+			(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
+			(__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
+			(__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
+			(__bridge id)kSecReturnAttributes: @YES,
+			(__bridge id)kSecReturnData: @YES,
+			(__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne,
+			(__bridge id)kSecUseAuthenticationContext: context
+		};
 	} else {
 		query = @{
-        	(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
-            (__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
-            (__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
-            (__bridge id)kSecReturnAttributes: @YES,
-            (__bridge id)kSecReturnData: @YES,
-            (__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne
-        };
+			(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
+			(__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
+			(__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
+			(__bridge id)kSecReturnAttributes: @YES,
+			(__bridge id)kSecReturnData: @YES,
+			(__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne
+		};
 	}
 
 	CFDictionaryRef result = NULL;
@@ -87,11 +87,11 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
 			};
 		} else {
 			attributes = @{
-            	(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
-            	(__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
-            	(__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
-            	(__bridge id)kSecValueData: [NSData dataWithBytes:pwStr length:length]
-            };
+				(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
+				(__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
+				(__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
+				(__bridge id)kSecValueData: [NSData dataWithBytes:pwStr length:length]
+			};
 		}
 		status = SecItemAdd((__bridge CFDictionaryRef)attributes, NULL);
 	} else {

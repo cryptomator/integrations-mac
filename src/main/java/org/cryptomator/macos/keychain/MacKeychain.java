@@ -17,9 +17,9 @@ class MacKeychain {
 	/**
 	 * Associates the specified password with the specified key in the system keychain.
 	 *
-	 * @param serviceName 			  Service name
-	 * @param account     			  Unique account identifier
-	 * @param password    			  Passphrase to store
+	 * @param serviceName             Service name
+	 * @param account                 Unique account identifier
+	 * @param password                Passphrase to store
 	 * @param requireOsAuthentication Defines, whether the user needs to authenticate to store a passphrase
 	 * @see <a href="https://developer.apple.com/documentation/security/1398366-seckeychainaddgenericpassword">SecKeychainAddGenericPassword</a>
 	 */
