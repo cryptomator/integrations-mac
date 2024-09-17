@@ -12,26 +12,12 @@
 #import <LocalAuthentication/LocalAuthentication.h>
 
 static LAContext *sharedContext = nil;
-
-LAContext* getSharedLAContext(void) {
+static LAContext* getSharedLAContext(void) {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 		sharedContext = [[LAContext alloc] init];
 	});
 	return sharedContext;
-}
-
-SecAccessControlRef createAccessControl(void) {
-	SecAccessControlCreateFlags flags = kSecAccessControlUserPresence;
-
-	SecAccessControlRef accessControl = SecAccessControlCreateWithFlags(
-		kCFAllocatorDefault,
-		kSecAttrAccessibleWhenUnlocked,
-		flags,
-		NULL // Ignore any error
-	);
-
-	return accessControl;
 }
 
 JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_storePassword(JNIEnv *env, jobject thisObj, jbyteArray service, jbyteArray key, jbyteArray password, jboolean requireOsAuthentication) {
@@ -41,31 +27,18 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
 	jsize length = (*env)->GetArrayLength(env, password);
 
 	// find existing:
-	NSDictionary *query = NULL;
-
+	NSMutableDictionary *query = [@{
+		(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
+		(__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
+		(__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
+		(__bridge id)kSecReturnAttributes: @YES,
+		(__bridge id)kSecReturnData: @YES,
+		(__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne
+	} mutableCopy];
 	if (requireOsAuthentication) {
 		LAContext *context = getSharedLAContext();
-
-		query = @{
-			(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
-			(__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
-			(__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
-			(__bridge id)kSecReturnAttributes: @YES,
-			(__bridge id)kSecReturnData: @YES,
-			(__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne,
-			(__bridge id)kSecUseAuthenticationContext: context
-		};
-	} else {
-		query = @{
-			(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
-			(__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
-			(__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
-			(__bridge id)kSecReturnAttributes: @YES,
-			(__bridge id)kSecReturnData: @YES,
-			(__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne
-		};
+		query[(__bridge id)kSecUseAuthenticationContext] = context;
 	}
-
 	CFDictionaryRef result = NULL;
 	OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef *)&result);
 	if (status == errSecSuccess && result != NULL) {
@@ -76,22 +49,14 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
 		status = SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)attributesToUpdate);
 	} else if (status == errSecItemNotFound) {
 		// add new:
-		NSDictionary *attributes = NULL;
+		NSMutableDictionary *attributes = [@{
+			(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
+			(__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
+			(__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
+			(__bridge id)kSecValueData: [NSData dataWithBytes:pwStr length:length]
+		} mutableCopy];
 		if (requireOsAuthentication) {
-			attributes = @{
-				(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
-				(__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
-				(__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
-				(__bridge id)kSecAttrAccessControl: (__bridge_transfer id)createAccessControl(),
-				(__bridge id)kSecValueData: [NSData dataWithBytes:pwStr length:length]
-			};
-		} else {
-			attributes = @{
-				(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
-				(__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
-				(__bridge id)kSecAttrAccount: [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding],
-				(__bridge id)kSecValueData: [NSData dataWithBytes:pwStr length:length]
-			};
+			attributes[(__bridge id)kSecAttrAccessControl] = (__bridge_transfer id)SecAccessControlCreateWithFlags(kCFAllocatorDefault, kSecAttrAccessibleWhenUnlocked, kSecAccessControlUserPresence, NULL);
 		}
 		status = SecItemAdd((__bridge CFDictionaryRef)attributes, NULL);
 	} else {
@@ -108,9 +73,8 @@ JNIEXPORT jbyteArray JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_000
 	jbyte *serviceStr = (*env)->GetByteArrayElements(env, service, NULL);
 	jbyte *keyStr = (*env)->GetByteArrayElements(env, key, NULL);
 
-	LAContext *context = getSharedLAContext();
-
 	// find existing:
+	LAContext *context = getSharedLAContext();
 	NSDictionary *query = @{
 		(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
 		(__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
@@ -142,9 +106,8 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
 	jbyte *serviceStr = (*env)->GetByteArrayElements(env, service, NULL);
 	jbyte *keyStr = (*env)->GetByteArrayElements(env, key, NULL);
 
-	LAContext *context = getSharedLAContext();
-
 	// find existing:
+	LAContext *context = getSharedLAContext();
 	NSDictionary *query = @{
 		(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
 		(__bridge id)kSecAttrService: [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding],
