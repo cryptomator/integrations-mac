@@ -35,8 +35,8 @@ public class MacSystemKeychainAccess implements KeychainAccessProvider {
 	}
 
 	@Override
-	public void storePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException {
-		keychain.storePassword(SERVICE_NAME, key, passphrase);
+	public void storePassphrase(String key, String displayName, CharSequence passphrase, boolean requireOsAuthentication) throws KeychainAccessException {
+		keychain.storePassword(SERVICE_NAME, key, passphrase, requireOsAuthentication);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class MacSystemKeychainAccess implements KeychainAccessProvider {
 	@Override
 	public void changePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException {
 		if (keychain.deletePassword(SERVICE_NAME, key)) {
-			keychain.storePassword(SERVICE_NAME, key, passphrase);
+			keychain.storePassword(SERVICE_NAME, key, passphrase, false);
 		}
 	}
 

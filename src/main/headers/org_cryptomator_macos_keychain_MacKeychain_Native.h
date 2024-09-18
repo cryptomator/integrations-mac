@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     org_cryptomator_macos_keychain_MacKeychain_Native
  * Method:    storePassword
- * Signature: ([B[B[B)I
+ * Signature: ([B[B[BZ)I
  */
 JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_storePassword
-  (JNIEnv *, jobject, jbyteArray, jbyteArray, jbyteArray);
+  (JNIEnv *, jobject, jbyteArray, jbyteArray, jbyteArray, jboolean);
 
 /*
  * Class:     org_cryptomator_macos_keychain_MacKeychain_Native
