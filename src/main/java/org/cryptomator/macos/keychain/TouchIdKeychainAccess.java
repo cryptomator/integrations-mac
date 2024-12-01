@@ -7,36 +7,37 @@ import org.cryptomator.integrations.keychain.KeychainAccessProvider;
 import org.cryptomator.macos.common.Localization;
 
 /**
- * Stores passwords in the macOS system keychain.
+ * Stores passwords in the macOS system keychain. Requires an authenticated user to do so.
+ * Authentication is done via TouchID or password as a fallback, when TouchID is not available.
  * <p>
  * Items are stored in the default keychain with the service name <code>Cryptomator</code>, unless configured otherwise
  * using the system property <code>cryptomator.integrationsMac.keychainServiceName</code>.
  */
 @Priority(1000)
 @OperatingSystem(OperatingSystem.Value.MAC)
-public class MacSystemKeychainAccess implements KeychainAccessProvider {
+public class TouchIdKeychainAccess implements KeychainAccessProvider {
 
 	private static final String SERVICE_NAME = System.getProperty("cryptomator.integrationsMac.keychainServiceName", "Cryptomator");
 
 	private final MacKeychain keychain;
 
-	public MacSystemKeychainAccess() {
+	public TouchIdKeychainAccess() {
 		this(new MacKeychain());
 	}
 
 	// visible for testing
-	MacSystemKeychainAccess(MacKeychain keychain) {
+	TouchIdKeychainAccess(MacKeychain keychain) {
 		this.keychain = keychain;
 	}
 
 	@Override
 	public String displayName() {
-		return Localization.get().getString("org.cryptomator.macos.keychain.displayName");
+		return Localization.get().getString("org.cryptomator.macos.keychain.touchIdDisplayName");
 	}
 
 	@Override
 	public void storePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException {
-		keychain.storePassword(SERVICE_NAME, key, passphrase, false);
+		keychain.storePassword(SERVICE_NAME, key, passphrase, true);
 	}
 
 	@Override
@@ -67,7 +68,7 @@ public class MacSystemKeychainAccess implements KeychainAccessProvider {
 	@Override
 	public void changePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException {
 		if (keychain.deletePassword(SERVICE_NAME, key)) {
-			keychain.storePassword(SERVICE_NAME, key, passphrase, false);
+			keychain.storePassword(SERVICE_NAME, key, passphrase, true);
 		}
 	}
 
