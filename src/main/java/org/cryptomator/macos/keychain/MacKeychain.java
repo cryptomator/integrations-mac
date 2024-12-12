@@ -104,6 +104,15 @@ class MacKeychain {
 		}
 	}
 
+	/**
+	 * Tests whether biometric authentication via Touch ID is supported and allowed on the device
+	 *
+	 * @return <code>true</code> if biometric authentication is available, <code>false</code> otherwise
+	 */
+	public boolean isTouchIDavailable() {
+		return Native.INSTANCE.isTouchIDavailable();
+	}
+
 	// initialization-on-demand pattern, as loading the .dylib is an expensive operation
 	private static class Native {
 		static final Native INSTANCE = new Native();
@@ -117,6 +126,8 @@ class MacKeychain {
 		public native byte[] loadPassword(byte[] service, byte[] account);
 
 		public native int deletePassword(byte[] service, byte[] account);
+
+		public native boolean isTouchIDavailable();
 	}
 
 }

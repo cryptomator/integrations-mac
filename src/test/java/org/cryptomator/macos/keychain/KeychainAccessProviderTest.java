@@ -12,7 +12,7 @@ public class KeychainAccessProviderTest {
 	public void testLoadMacSystemKeychainAccess() {
 		var provider = KeychainAccessProvider.get().findAny();
 		Assertions.assertTrue(provider.isPresent());
-		Assertions.assertInstanceOf(MacSystemKeychainAccess.class, provider.get());
+		Assertions.assertInstanceOf(TouchIdKeychainAccess.class, provider.get());
 	}
 
 }

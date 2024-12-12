@@ -52,7 +52,7 @@ public class TouchIdKeychainAccess implements KeychainAccessProvider {
 
 	@Override
 	public boolean isSupported() {
-		return true;
+		return keychain.isTouchIDavailable();
 	}
 
 	@Override
