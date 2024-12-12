@@ -13,7 +13,7 @@ import org.cryptomator.macos.common.Localization;
  * Items are stored in the default keychain with the service name <code>Cryptomator</code>, unless configured otherwise
  * using the system property <code>cryptomator.integrationsMac.keychainServiceName</code>.
  */
-@Priority(1000)
+@Priority(1010)
 @OperatingSystem(OperatingSystem.Value.MAC)
 public class TouchIdKeychainAccess implements KeychainAccessProvider {
 
