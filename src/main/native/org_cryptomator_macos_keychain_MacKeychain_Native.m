@@ -123,3 +123,14 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
 	(*env)->ReleaseByteArrayElements(env, key, keyStr, JNI_ABORT);
 	return status;
 }
+
+JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_isTouchIDavailable(JNIEnv *env, jobject thisObj) {
+	NSError *error = nil;
+	LAContext *context = getSharedLAContext();
+	if ([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error]) {
+		return JNI_TRUE;
+	} else {
+		NSLog(@"Touch ID is not available: %@", error.localizedDescription);
+		return JNI_FALSE;
+	}
+}
