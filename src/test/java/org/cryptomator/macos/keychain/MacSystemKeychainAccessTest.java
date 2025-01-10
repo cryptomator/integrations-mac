@@ -31,17 +31,17 @@ public class MacSystemKeychainAccessTest {
 	public void testStoreSuccess() throws KeychainAccessException {
 		keychainAccess.storePassphrase("key", "pass");
 
-		Mockito.verify(keychain).storePassword("Cryptomator", "key", "pass");
+		Mockito.verify(keychain).storePassword("Cryptomator", "key", "pass", false);
 	}
 
 	@Test
 	@DisplayName("storePassphrase() fails")
 	public void testStoreError() throws KeychainAccessException {
 		KeychainAccessException e = new KeychainAccessException("fail.");
-		Mockito.doThrow(e).when(keychain).storePassword(Mockito.eq("Cryptomator"), Mockito.any(), Mockito.any());
+		Mockito.doThrow(e).when(keychain).storePassword(Mockito.eq("Cryptomator"), Mockito.any(), Mockito.any(), Mockito.eq(false));
 
 		KeychainAccessException thrown = Assertions.assertThrows(KeychainAccessException.class, () -> {
-			keychainAccess.storePassphrase("key", "pass");
+			keychainAccess.storePassphrase("key", "", "pass", false);
 		});
 		Assertions.assertSame(thrown, e);
 	}
@@ -93,7 +93,7 @@ public class MacSystemKeychainAccessTest {
 
 		keychainAccess.changePassphrase("key", "newpass");
 
-		Mockito.verify(keychain).storePassword("Cryptomator", "key", "newpass");
+		Mockito.verify(keychain).storePassword("Cryptomator", "key", "newpass", false);
 	}
 
 	@Test
@@ -103,7 +103,7 @@ public class MacSystemKeychainAccessTest {
 
 		keychainAccess.changePassphrase("key", "newpass");
 
-		Mockito.verify(keychain, Mockito.never()).storePassword("Cryptomator", "key", "newpass");
+		Mockito.verify(keychain, Mockito.never()).storePassword("Cryptomator", "key", "newpass", false);
 	}
 
 	@Test

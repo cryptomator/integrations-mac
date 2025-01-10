@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     org_cryptomator_macos_keychain_MacKeychain_Native
  * Method:    storePassword
- * Signature: ([B[B[B)I
+ * Signature: ([B[B[BZ)I
  */
 JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_storePassword
-  (JNIEnv *, jobject, jbyteArray, jbyteArray, jbyteArray);
+  (JNIEnv *, jobject, jbyteArray, jbyteArray, jbyteArray, jboolean);
 
 /*
  * Class:     org_cryptomator_macos_keychain_MacKeychain_Native
@@ -30,6 +30,14 @@ JNIEXPORT jbyteArray JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_000
  */
 JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_deletePassword
   (JNIEnv *, jobject, jbyteArray, jbyteArray);
+
+/*
+ * Class:     org_cryptomator_macos_keychain_MacKeychain_Native
+ * Method:    isTouchIDavailable
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_isTouchIDavailable
+  (JNIEnv *, jobject);
 
 #ifdef __cplusplus
 }
