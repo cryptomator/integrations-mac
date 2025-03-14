@@ -10,11 +10,13 @@
 	<name>Cryptomator Integrations for macOS</name>
 	<description>Provides optional macOS services used by Cryptomator</description>
 	<url>https://github.com/cryptomator/integrations-mac</url>
+	
 	<scm>
 		<connection>scm:git:git@github.com:cryptomator/integrations-mac.git</connection>
 		<developerConnection>scm:git:git@github.com:cryptomator/integrations-mac.git</developerConnection>
-		<url>git@github.com:cryptomator/integrations-mac.git</url>
+		<url>https://github.com/cryptomator/integrations-mac</url>
 	</scm>
+
 	<developers>
 		<developer>
 			<name>Sebastian Stenzel</name>
