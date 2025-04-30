@@ -168,7 +168,7 @@
 								<argument>-arch</argument>
 								<argument>x86_64</argument>
 								<argument>-archivePath</argument>
-								<argument>${project.build.directory}/integrations-x64_64.xcarchive</argument>
+								<argument>${project.build.directory}/integrations-x86_64.xcarchive</argument>
 								<argument>-quiet</argument>
 								<argument>clean</argument>
 								<argument>archive</argument>
