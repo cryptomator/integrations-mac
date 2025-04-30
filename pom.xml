@@ -214,7 +214,7 @@
 							<workingDirectory>${project.build.directory}</workingDirectory>
 							<arguments>
 								<argument>-create</argument>
-								<argument>integrations-x64_64.xcarchive/Products/usr/local/lib/libIntegrations.dylib</argument>
+								<argument>integrations-x86_64.xcarchive/Products/usr/local/lib/libIntegrations.dylib</argument>
 								<argument>integrations-arm64.xcarchive/Products/usr/local/lib/libIntegrations.dylib</argument>
 								<argument>-output</argument>
 								<argument>libIntegrations.dylib</argument>
