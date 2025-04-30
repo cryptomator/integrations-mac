@@ -150,6 +150,7 @@
 				<version>3.5.0</version>
 				<executions>
 					<execution>
+						<id>xcode-build-intel</id>
 						<goals>
 							<goal>exec</goal>
 						</goals>
@@ -164,12 +165,59 @@
 								<argument>Integrations</argument>
 								<argument>-configuration</argument>
 								<argument>Release</argument>
+								<argument>-arch</argument>
+								<argument>x86_64</argument>
 								<argument>-archivePath</argument>
-								<argument>${project.build.directory}/integrations.xcarchive</argument>
+								<argument>${project.build.directory}/integrations-x86_64.xcarchive</argument>
 								<argument>-quiet</argument>
 								<argument>clean</argument>
 								<argument>archive</argument>
 								<argument>JAVA_HOME="${java.home}"</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>xcode-build-arm</id>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<phase>compile</phase>
+						<configuration>
+							<executable>xcodebuild</executable>
+							<workingDirectory>${project.basedir}/src/main/native</workingDirectory>
+							<arguments>
+								<argument>-project</argument>
+								<argument>Integrations.xcodeproj</argument>
+								<argument>-scheme</argument>
+								<argument>Integrations</argument>
+								<argument>-configuration</argument>
+								<argument>Release</argument>
+								<argument>-arch</argument>
+								<argument>arm64</argument>
+								<argument>-archivePath</argument>
+								<argument>${project.build.directory}/integrations-arm64.xcarchive</argument>
+								<argument>-quiet</argument>
+								<argument>clean</argument>
+								<argument>archive</argument>
+								<argument>JAVA_HOME="${java.home}"</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>build-universal-binary</id>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<phase>compile</phase>
+						<configuration>
+							<executable>lipo</executable>
+							<workingDirectory>${project.build.directory}</workingDirectory>
+							<arguments>
+								<argument>-create</argument>
+								<argument>integrations-x86_64.xcarchive/Products/usr/local/lib/libIntegrations.dylib</argument>
+								<argument>integrations-arm64.xcarchive/Products/usr/local/lib/libIntegrations.dylib</argument>
+								<argument>-output</argument>
+								<argument>libIntegrations.dylib</argument>
 							</arguments>
 						</configuration>
 					</execution>
@@ -188,9 +236,9 @@
 							<outputDirectory>${project.build.directory}/classes</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${project.build.directory}/integrations.xcarchive/Products/usr/local/lib</directory>
+									<directory>${project.build.directory}</directory>
 									<includes>
-										<include>*.dylib</include>
+										<include>libIntegrations.dylib</include>
 									</includes>
 								</resource>
 							</resources>
