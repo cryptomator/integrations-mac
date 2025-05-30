@@ -1,10 +1,10 @@
 package org.cryptomator.macos.keychain;
 
+import org.cryptomator.integrations.common.LocalizedDisplayName;
 import org.cryptomator.integrations.common.OperatingSystem;
 import org.cryptomator.integrations.common.Priority;
 import org.cryptomator.integrations.keychain.KeychainAccessException;
 import org.cryptomator.integrations.keychain.KeychainAccessProvider;
-import org.cryptomator.macos.common.Localization;
 
 /**
  * Stores passwords in the macOS system keychain. Requires an authenticated user to do so.
@@ -15,6 +15,7 @@ import org.cryptomator.macos.common.Localization;
  */
 @Priority(1010)
 @OperatingSystem(OperatingSystem.Value.MAC)
+@LocalizedDisplayName(bundle = "MacIntegrationsBundle", key = "org.cryptomator.macos.keychain.touchIdDisplayName")
 public class TouchIdKeychainAccess implements KeychainAccessProvider {
 
 	private static final String SERVICE_NAME = System.getProperty("cryptomator.integrationsMac.keychainServiceName", "Cryptomator");
@@ -31,18 +32,8 @@ public class TouchIdKeychainAccess implements KeychainAccessProvider {
 	}
 
 	@Override
-	public String displayName() {
-		return Localization.get().getString("org.cryptomator.macos.keychain.touchIdDisplayName");
-	}
-
-	@Override
 	public void storePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException {
 		keychain.storePassword(SERVICE_NAME, key, passphrase, true);
-	}
-
-	@Override
-	public void storePassphrase(String key, String displayName, CharSequence passphrase, boolean requireOsAuthentication) throws KeychainAccessException {
-		keychain.storePassword(SERVICE_NAME, key, passphrase, requireOsAuthentication);
 	}
 
 	@Override

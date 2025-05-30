@@ -21,7 +21,7 @@ public class MacSystemKeychainAccessTest {
 	@Test
 	@DisplayName("displayName() does not return default name")
 	public void testDisplayName() {
-		var displayName = keychainAccess.displayName();
+		var displayName = keychainAccess.getName();
 
 		Assertions.assertNotEquals(keychainAccess.getClass().getSimpleName(), displayName);
 	}
@@ -29,7 +29,7 @@ public class MacSystemKeychainAccessTest {
 	@Test
 	@DisplayName("storePassphrase() succeeds")
 	public void testStoreSuccess() throws KeychainAccessException {
-		keychainAccess.storePassphrase("key", "pass");
+		keychainAccess.storePassphrase("key", "name", "pass");
 
 		Mockito.verify(keychain).storePassword("Cryptomator", "key", "pass", false);
 	}
@@ -41,7 +41,7 @@ public class MacSystemKeychainAccessTest {
 		Mockito.doThrow(e).when(keychain).storePassword(Mockito.eq("Cryptomator"), Mockito.any(), Mockito.any(), Mockito.eq(false));
 
 		KeychainAccessException thrown = Assertions.assertThrows(KeychainAccessException.class, () -> {
-			keychainAccess.storePassphrase("key", "", "pass", false);
+			keychainAccess.storePassphrase("key", "", "pass");
 		});
 		Assertions.assertSame(thrown, e);
 	}
@@ -91,7 +91,7 @@ public class MacSystemKeychainAccessTest {
 	public void testChangeSuccess() throws KeychainAccessException {
 		Mockito.when(keychain.deletePassword("Cryptomator", "key")).thenReturn(true);
 
-		keychainAccess.changePassphrase("key", "newpass");
+		keychainAccess.changePassphrase("key", "name", "newpass");
 
 		Mockito.verify(keychain).storePassword("Cryptomator", "key", "newpass", false);
 	}
@@ -101,7 +101,7 @@ public class MacSystemKeychainAccessTest {
 	public void testChangeNotFound() throws KeychainAccessException {
 		Mockito.when(keychain.deletePassword("Cryptomator", "key")).thenReturn(false);
 
-		keychainAccess.changePassphrase("key", "newpass");
+		keychainAccess.changePassphrase("key", "name", "newpass");
 
 		Mockito.verify(keychain, Mockito.never()).storePassword("Cryptomator", "key", "newpass", false);
 	}
@@ -113,7 +113,7 @@ public class MacSystemKeychainAccessTest {
 		Mockito.doThrow(e).when(keychain).deletePassword(Mockito.eq("Cryptomator"), Mockito.any());
 
 		KeychainAccessException thrown = Assertions.assertThrows(KeychainAccessException.class, () -> {
-			keychainAccess.changePassphrase("key", "newpass");
+			keychainAccess.changePassphrase("key", "name", "newpass");
 		});
 		Assertions.assertSame(thrown, e);
 	}
