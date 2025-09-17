@@ -16,7 +16,7 @@ updates:
         patterns:
           - "org.apache.maven.plugins:*"
           - "org.owasp:dependency-check-maven"
-          - "org.sonatype.plugins:nexus-staging-maven-plugin"
+          - "org.sonatype.central:central-publishing-maven-plugin"
           - "org.codehaus.mojo:exec-maven-plugin"
       java-production-dependencies:
         patterns:
@@ -26,7 +26,7 @@ updates:
           - "org.mockito:*"
           - "org.apache.maven.plugins:*"
           - "org.owasp:dependency-check-maven"
-          - "org.sonatype.plugins:nexus-staging-maven-plugin"
+          - "org.sonatype.central:central-publishing-maven-plugin"
           - "org.codehaus.mojo:exec-maven-plugin"
   - package-ecosystem: "github-actions"
     directory: "/" # even for `.github/workflows`
