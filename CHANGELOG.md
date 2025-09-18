@@ -8,6 +8,10 @@ The changelog starts with version 1.4.1.
 Changes to prior versions can be found on the [Github release page](https://github.com/cryptomator/integrations-mac/releases).
 
 ## [Unreleased]
+### Added
+
+* Added translation for Ukrainian (uk). (#81)
+
 ### Changed
 
 * Updated `org.cryptomator:integrations-api` from 1.6.0 to 1.7.0
