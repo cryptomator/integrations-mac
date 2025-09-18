@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 The changelog starts with version 1.4.1.
 Changes to prior versions can be found on the [Github release page](https://github.com/cryptomator/integrations-mac/releases).
 
-## [Unreleased]
+## [1.4.1] - 2025-09-18
 ### Added
 
 * Added translation for Ukrainian (uk). (#81)
