@@ -18,6 +18,9 @@
 		9E21341125542ECE006EA872 /* SKYAppearanceNotifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E21340F25542ECE006EA872 /* SKYAppearanceNotifier.h */; };
 		9E21341225542ECE006EA872 /* SKYAppearanceNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E21341025542ECE006EA872 /* SKYAppearanceNotifier.m */; };
 		9EACB1B425557865000F3214 /* org_cryptomator_macos_tray_ActivationPolicy_Native.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EACB1B325557865000F3214 /* org_cryptomator_macos_tray_ActivationPolicy_Native.m */; };
+		9EFD0C2D2FF5F67B0085C511 /* org_cryptomator_macos_tray_DockTileIcon_Native.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFD0C2C2FF5F67B0085C511 /* org_cryptomator_macos_tray_DockTileIcon_Native.m */; };
+		9EFE12342FF7A1B000ABCD01 /* SKYDockTileIcon.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFE12302FF7A1B000ABCD01 /* SKYDockTileIcon.h */; };
+		9EFE12352FF7A1B000ABCD01 /* SKYDockTileIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFE12312FF7A1B000ABCD01 /* SKYDockTileIcon.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +36,9 @@
 		9E21340F25542ECE006EA872 /* SKYAppearanceNotifier.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKYAppearanceNotifier.h; sourceTree = "<group>"; };
 		9E21341025542ECE006EA872 /* SKYAppearanceNotifier.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKYAppearanceNotifier.m; sourceTree = "<group>"; };
 		9EACB1B325557865000F3214 /* org_cryptomator_macos_tray_ActivationPolicy_Native.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = org_cryptomator_macos_tray_ActivationPolicy_Native.m; sourceTree = "<group>"; };
+		9EFD0C2C2FF5F67B0085C511 /* org_cryptomator_macos_tray_DockTileIcon_Native.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = org_cryptomator_macos_tray_DockTileIcon_Native.m; sourceTree = "<group>"; };
+		9EFE12302FF7A1B000ABCD01 /* SKYDockTileIcon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKYDockTileIcon.h; sourceTree = "<group>"; };
+		9EFE12312FF7A1B000ABCD01 /* SKYDockTileIcon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKYDockTileIcon.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,12 +58,15 @@
 				74CF2E7A254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m */,
 				9E0819C71D75CABC000C89E6 /* org_cryptomator_macos_keychain_MacKeychain_Native.m */,
 				9EACB1B325557865000F3214 /* org_cryptomator_macos_tray_ActivationPolicy_Native.m */,
+				9EFD0C2C2FF5F67B0085C511 /* org_cryptomator_macos_tray_DockTileIcon_Native.m */,
 				9E2133FF25542735006EA872 /* org_cryptomator_macos_uiappearance_AppAppearance_Native.m */,
 				9E2134022554275D006EA872 /* org_cryptomator_macos_uiappearance_MacSystemAppearance_Native.m */,
 				9E21340F25542ECE006EA872 /* SKYAppearanceNotifier.h */,
 				9E21341025542ECE006EA872 /* SKYAppearanceNotifier.m */,
 				9E213409255429CA006EA872 /* SKYAppearanceObserver.h */,
 				9E21340A255429CA006EA872 /* SKYAppearanceObserver.m */,
+				9EFE12302FF7A1B000ABCD01 /* SKYDockTileIcon.h */,
+				9EFE12312FF7A1B000ABCD01 /* SKYDockTileIcon.m */,
 				74BEF1832C0384FB006731AC /* SKYLaunchService.h */,
 				74BEF1842C0384FB006731AC /* SKYLaunchService.m */,
 				9E0819B81D748ECC000C89E6 /* Products */,
@@ -82,6 +91,7 @@
 				9E21341125542ECE006EA872 /* SKYAppearanceNotifier.h in Headers */,
 				74BEF1862C0384FB006731AC /* SKYLaunchService.h in Headers */,
 				9E21340B255429CA006EA872 /* SKYAppearanceObserver.h in Headers */,
+				9EFE12342FF7A1B000ABCD01 /* SKYDockTileIcon.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,6 +160,8 @@
 				9E21341225542ECE006EA872 /* SKYAppearanceNotifier.m in Sources */,
 				9E0819C91D75CABC000C89E6 /* org_cryptomator_macos_keychain_MacKeychain_Native.m in Sources */,
 				9E2134032554275D006EA872 /* org_cryptomator_macos_uiappearance_MacSystemAppearance_Native.m in Sources */,
+				9EFD0C2D2FF5F67B0085C511 /* org_cryptomator_macos_tray_DockTileIcon_Native.m in Sources */,
+				9EFE12352FF7A1B000ABCD01 /* SKYDockTileIcon.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
