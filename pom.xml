@@ -228,6 +228,58 @@
 						</configuration>
 					</execution>
 					<execution>
+						<id>xcode-build-docktile-intel</id>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<phase>compile</phase>
+						<configuration>
+							<executable>xcodebuild</executable>
+							<workingDirectory>${project.basedir}/src/main/native</workingDirectory>
+							<arguments>
+								<argument>-project</argument>
+								<argument>Integrations.xcodeproj</argument>
+								<argument>-scheme</argument>
+								<argument>DockTilePlugin</argument>
+								<argument>-configuration</argument>
+								<argument>Release</argument>
+								<argument>-arch</argument>
+								<argument>x86_64</argument>
+								<argument>-derivedDataPath</argument>
+								<argument>${project.build.directory}/docktile-x86_64-build</argument>
+								<argument>-quiet</argument>
+								<argument>clean</argument>
+								<argument>build</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>xcode-build-docktile-arm</id>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<phase>compile</phase>
+						<configuration>
+							<executable>xcodebuild</executable>
+							<workingDirectory>${project.basedir}/src/main/native</workingDirectory>
+							<arguments>
+								<argument>-project</argument>
+								<argument>Integrations.xcodeproj</argument>
+								<argument>-scheme</argument>
+								<argument>DockTilePlugin</argument>
+								<argument>-configuration</argument>
+								<argument>Release</argument>
+								<argument>-arch</argument>
+								<argument>arm64</argument>
+								<argument>-derivedDataPath</argument>
+								<argument>${project.build.directory}/docktile-arm64-build</argument>
+								<argument>-quiet</argument>
+								<argument>clean</argument>
+								<argument>build</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
 						<id>build-universal-binary</id>
 						<goals>
 							<goal>exec</goal>
@@ -242,6 +294,27 @@
 								<argument>integrations-arm64.xcarchive/Products/usr/local/lib/libIntegrations.dylib</argument>
 								<argument>-output</argument>
 								<argument>libIntegrations.dylib</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>merge-docktile-bundles</id>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<phase>compile</phase>
+						<configuration>
+							<executable>bash</executable>
+							<workingDirectory>${project.build.directory}</workingDirectory>
+							<arguments>
+								<argument>-c</argument>
+								<argument>
+									cp -R docktile-arm64-build/Build/Products/Release/Cryptomator.docktileplugin . &amp;&amp;
+									lipo -create \
+										docktile-x86_64-build/Build/Products/Release/Cryptomator.docktileplugin/Contents/MacOS/Cryptomator \
+										docktile-arm64-build/Build/Products/Release/Cryptomator.docktileplugin/Contents/MacOS/Cryptomator \
+										-output Cryptomator.docktileplugin/Contents/MacOS/Cryptomator
+								</argument>
 							</arguments>
 						</configuration>
 					</execution>
@@ -263,6 +336,7 @@
 									<directory>${project.build.directory}</directory>
 									<includes>
 										<include>libIntegrations.dylib</include>
+										<include>Cryptomator.docktileplugin/**</include>
 									</includes>
 								</resource>
 							</resources>

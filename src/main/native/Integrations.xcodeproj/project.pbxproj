@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		741DDCF32E818DE5009768A7 /* CryptomatorDockTilePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741DDCF22E8186F0009768A7 /* CryptomatorDockTilePlugin.swift */; };
+		741DDCF62E818F2C009768A7 /* Cryptomator.icns in Resources */ = {isa = PBXBuildFile; fileRef = 741DDCF52E818F2C009768A7 /* Cryptomator.icns */; };
 		74BEF1852C0384FB006731AC /* SKYLaunchService.m in Sources */ = {isa = PBXBuildFile; fileRef = 74BEF1842C0384FB006731AC /* SKYLaunchService.m */; };
 		74BEF1862C0384FB006731AC /* SKYLaunchService.h in Headers */ = {isa = PBXBuildFile; fileRef = 74BEF1832C0384FB006731AC /* SKYLaunchService.h */; };
 		74CF2E7B254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m in Sources */ = {isa = PBXBuildFile; fileRef = 74CF2E7A254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m */; };
@@ -18,12 +20,12 @@
 		9E21341125542ECE006EA872 /* SKYAppearanceNotifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E21340F25542ECE006EA872 /* SKYAppearanceNotifier.h */; };
 		9E21341225542ECE006EA872 /* SKYAppearanceNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E21341025542ECE006EA872 /* SKYAppearanceNotifier.m */; };
 		9EACB1B425557865000F3214 /* org_cryptomator_macos_tray_ActivationPolicy_Native.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EACB1B325557865000F3214 /* org_cryptomator_macos_tray_ActivationPolicy_Native.m */; };
-		9EFD0C2D2FF5F67B0085C511 /* org_cryptomator_macos_tray_DockTileIcon_Native.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFD0C2C2FF5F67B0085C511 /* org_cryptomator_macos_tray_DockTileIcon_Native.m */; };
-		9EFE12342FF7A1B000ABCD01 /* SKYDockTileIcon.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFE12302FF7A1B000ABCD01 /* SKYDockTileIcon.h */; };
-		9EFE12352FF7A1B000ABCD01 /* SKYDockTileIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFE12312FF7A1B000ABCD01 /* SKYDockTileIcon.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		741DDCED2E818651009768A7 /* Cryptomator.docktileplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Cryptomator.docktileplugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		741DDCF22E8186F0009768A7 /* CryptomatorDockTilePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptomatorDockTilePlugin.swift; sourceTree = "<group>"; };
+		741DDCF52E818F2C009768A7 /* Cryptomator.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Cryptomator.icns; sourceTree = "<group>"; };
 		74BEF1832C0384FB006731AC /* SKYLaunchService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKYLaunchService.h; sourceTree = "<group>"; };
 		74BEF1842C0384FB006731AC /* SKYLaunchService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKYLaunchService.m; sourceTree = "<group>"; };
 		74CF2E7A254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = org_cryptomator_macos_autostart_MacLaunchServices_Native.m; sourceTree = "<group>"; };
@@ -36,12 +38,16 @@
 		9E21340F25542ECE006EA872 /* SKYAppearanceNotifier.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKYAppearanceNotifier.h; sourceTree = "<group>"; };
 		9E21341025542ECE006EA872 /* SKYAppearanceNotifier.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKYAppearanceNotifier.m; sourceTree = "<group>"; };
 		9EACB1B325557865000F3214 /* org_cryptomator_macos_tray_ActivationPolicy_Native.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = org_cryptomator_macos_tray_ActivationPolicy_Native.m; sourceTree = "<group>"; };
-		9EFD0C2C2FF5F67B0085C511 /* org_cryptomator_macos_tray_DockTileIcon_Native.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = org_cryptomator_macos_tray_DockTileIcon_Native.m; sourceTree = "<group>"; };
-		9EFE12302FF7A1B000ABCD01 /* SKYDockTileIcon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKYDockTileIcon.h; sourceTree = "<group>"; };
-		9EFE12312FF7A1B000ABCD01 /* SKYDockTileIcon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKYDockTileIcon.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		741DDCEA2E818651009768A7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9E0819B41D748ECC000C89E6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -52,23 +58,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		741DDCF42E818F11009768A7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				741DDCF52E818F2C009768A7 /* Cryptomator.icns */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		9E0819AE1D748ECC000C89E6 = {
 			isa = PBXGroup;
 			children = (
 				74CF2E7A254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m */,
 				9E0819C71D75CABC000C89E6 /* org_cryptomator_macos_keychain_MacKeychain_Native.m */,
 				9EACB1B325557865000F3214 /* org_cryptomator_macos_tray_ActivationPolicy_Native.m */,
-				9EFD0C2C2FF5F67B0085C511 /* org_cryptomator_macos_tray_DockTileIcon_Native.m */,
 				9E2133FF25542735006EA872 /* org_cryptomator_macos_uiappearance_AppAppearance_Native.m */,
 				9E2134022554275D006EA872 /* org_cryptomator_macos_uiappearance_MacSystemAppearance_Native.m */,
 				9E21340F25542ECE006EA872 /* SKYAppearanceNotifier.h */,
 				9E21341025542ECE006EA872 /* SKYAppearanceNotifier.m */,
 				9E213409255429CA006EA872 /* SKYAppearanceObserver.h */,
 				9E21340A255429CA006EA872 /* SKYAppearanceObserver.m */,
-				9EFE12302FF7A1B000ABCD01 /* SKYDockTileIcon.h */,
-				9EFE12312FF7A1B000ABCD01 /* SKYDockTileIcon.m */,
 				74BEF1832C0384FB006731AC /* SKYLaunchService.h */,
 				74BEF1842C0384FB006731AC /* SKYLaunchService.m */,
+				741DDCF22E8186F0009768A7 /* CryptomatorDockTilePlugin.swift */,
+				741DDCF42E818F11009768A7 /* Resources */,
 				9E0819B81D748ECC000C89E6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -77,6 +90,7 @@
 			isa = PBXGroup;
 			children = (
 				9E0819B71D748ECC000C89E6 /* libIntegrations.dylib */,
+				741DDCED2E818651009768A7 /* Cryptomator.docktileplugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -91,13 +105,31 @@
 				9E21341125542ECE006EA872 /* SKYAppearanceNotifier.h in Headers */,
 				74BEF1862C0384FB006731AC /* SKYLaunchService.h in Headers */,
 				9E21340B255429CA006EA872 /* SKYAppearanceObserver.h in Headers */,
-				9EFE12342FF7A1B000ABCD01 /* SKYDockTileIcon.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		741DDCEC2E818651009768A7 /* DockTilePlugin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 741DDCEE2E818651009768A7 /* Build configuration list for PBXNativeTarget "DockTilePlugin" */;
+			buildPhases = (
+				741DDCE92E818651009768A7 /* Sources */,
+				741DDCEA2E818651009768A7 /* Frameworks */,
+				741DDCEB2E818651009768A7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DockTilePlugin;
+			packageProductDependencies = (
+			);
+			productName = DockTilePlugin;
+			productReference = 741DDCED2E818651009768A7 /* Cryptomator.docktileplugin */;
+			productType = "com.apple.product-type.bundle";
+		};
 		9E0819B61D748ECC000C89E6 /* Integrations */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9E0819BB1D748ECC000C89E6 /* Build configuration list for PBXNativeTarget "Integrations" */;
@@ -124,6 +156,11 @@
 				LastUpgradeCheck = 1420;
 				ORGANIZATIONNAME = Cryptomator;
 				TargetAttributes = {
+					741DDCEC2E818651009768A7 = {
+						CreatedOnToolsVersion = 26.0;
+						DevelopmentTeam = YZQJQUHA3L;
+						ProvisioningStyle = Automatic;
+					};
 					9E0819B61D748ECC000C89E6 = {
 						CreatedOnToolsVersion = 7.3.1;
 					};
@@ -143,11 +180,31 @@
 			projectRoot = "";
 			targets = (
 				9E0819B61D748ECC000C89E6 /* Integrations */,
+				741DDCEC2E818651009768A7 /* DockTilePlugin */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		741DDCEB2E818651009768A7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				741DDCF62E818F2C009768A7 /* Cryptomator.icns in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		741DDCE92E818651009768A7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				741DDCF32E818DE5009768A7 /* CryptomatorDockTilePlugin.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9E0819B31D748ECC000C89E6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -160,14 +217,79 @@
 				9E21341225542ECE006EA872 /* SKYAppearanceNotifier.m in Sources */,
 				9E0819C91D75CABC000C89E6 /* org_cryptomator_macos_keychain_MacKeychain_Native.m in Sources */,
 				9E2134032554275D006EA872 /* org_cryptomator_macos_uiappearance_MacSystemAppearance_Native.m in Sources */,
-				9EFD0C2D2FF5F67B0085C511 /* org_cryptomator_macos_tray_DockTileIcon_Native.m in Sources */,
-				9EFE12352FF7A1B000ABCD01 /* SKYDockTileIcon.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		741DDCEF2E818651009768A7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YZQJQUHA3L;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Cryptomator. All rights reserved.";
+				INFOPLIST_KEY_NSPrincipalClass = CryptomatorDockTilePlugin;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.cryptomator.DockTilePlugin;
+				PRODUCT_NAME = Cryptomator;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				WRAPPER_EXTENSION = docktileplugin;
+			};
+			name = Debug;
+		};
+		741DDCF02E818651009768A7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YZQJQUHA3L;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Cryptomator. All rights reserved.";
+				INFOPLIST_KEY_NSPrincipalClass = CryptomatorDockTilePlugin;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.cryptomator.DockTilePlugin;
+				PRODUCT_NAME = Cryptomator;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				WRAPPER_EXTENSION = docktileplugin;
+			};
+			name = Release;
+		};
 		9E0819B91D748ECC000C89E6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -223,6 +345,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
 				USER_HEADER_SEARCH_PATHS = ../headers;
 			};
 			name = Debug;
@@ -275,6 +398,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
 				USER_HEADER_SEARCH_PATHS = ../headers;
 			};
 			name = Release;
@@ -304,6 +428,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		741DDCEE2E818651009768A7 /* Build configuration list for PBXNativeTarget "DockTilePlugin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				741DDCEF2E818651009768A7 /* Debug */,
+				741DDCF02E818651009768A7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		9E0819B21D748ECC000C89E6 /* Build configuration list for PBXProject "Integrations" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
