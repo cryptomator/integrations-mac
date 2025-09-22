@@ -9,7 +9,7 @@
 #import "org_cryptomator_macos_tray_DockTileIcon_Native.h"
 #import "SKYDockTileIcon.h"
 
-JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_tray_DockTileIcon_00024Native_applyDefaultIcon(JNIEnv *env, jobject thisObj, jstring resourceName, jstring resourceType) {
+JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_tray_DockTileIcon_00024Native_applyIcon(JNIEnv *env, jobject thisObj, jstring resourceName, jstring resourceType) {
 	NSString *resourceNameString = nil;
 	if (resourceName != NULL) {
 		const char *resourceNameUtf = (*env)->GetStringUTFChars(env, resourceName, NULL);

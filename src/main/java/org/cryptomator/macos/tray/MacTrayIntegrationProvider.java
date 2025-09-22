@@ -12,7 +12,7 @@ public class MacTrayIntegrationProvider implements TrayIntegrationProvider {
 
 	public MacTrayIntegrationProvider() {
 		this.activationPolicy = new ActivationPolicy();
-		DockTileIcon.applyDefaultIconIfPossible("Cryptomator", "icns");
+		DockTileIcon.applyIcon("Cryptomator", "icns");
 	}
 
 	@Override

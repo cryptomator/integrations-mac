@@ -9,10 +9,10 @@ extern "C" {
 #endif
 /*
  * Class:     org_cryptomator_macos_tray_DockTileIcon_Native
- * Method:    applyDefaultIcon
+ * Method:    applyIcon
  * Signature: (Ljava/lang/String;Ljava/lang/String;)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_tray_DockTileIcon_00024Native_applyDefaultIcon
+JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_tray_DockTileIcon_00024Native_applyIcon
   (JNIEnv *, jobject, jstring, jstring);
 
 #ifdef __cplusplus

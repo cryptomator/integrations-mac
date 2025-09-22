@@ -4,8 +4,8 @@ import org.cryptomator.macos.common.NativeLibLoader;
 
 class DockTileIcon {
 
-	static void applyDefaultIconIfPossible(String resourceName, String resourceType) {
-		Native.INSTANCE.applyDefaultIcon(resourceName, resourceType);
+	static void applyIcon(String resourceName, String resourceType) {
+		Native.INSTANCE.applyIcon(resourceName, resourceType);
 	}
 
 	private static class Native {
@@ -15,7 +15,7 @@ class DockTileIcon {
 			NativeLibLoader.loadLib();
 		}
 
-		native boolean applyDefaultIcon(String resourceName, String resourceType);
+		native boolean applyIcon(String resourceName, String resourceType);
 	}
 
 }
