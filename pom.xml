@@ -29,7 +29,6 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.jdk.version>24</project.jdk.version>
 
 		<!-- runtime dependencies -->
 		<api.version>1.7.0</api.version>
@@ -37,7 +36,8 @@
 
 		<!-- test dependencies -->
 		<junit.jupiter.version>5.13.4</junit.jupiter.version>
-		<mockito.version>5.19.0</mockito.version>
+		<mockito.version>5.20.0</mockito.version>
+		<project.jdk.version>25</project.jdk.version>
 
 		<!-- build plugin dependencies -->
 		<mvn-clean.version>3.5.0</mvn-clean.version>
