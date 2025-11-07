@@ -93,7 +93,7 @@ public class DmgUpdateMechanism extends DownloadUpdateMechanism {
 					open -a "${CRYPTOMATOR_INSTALL_PATH}";
 					""";
 		Files.writeString(workDir.resolve("install.sh"), script, StandardCharsets.US_ASCII, StandardOpenOption.WRITE, StandardOpenOption.CREATE_NEW);
-		var command = List.of("bash", "-c", "/usr/bin/nohup bash install.sh >install.log 2>&1 &");
+		var command = List.of("/bin/zsh", "-c", "/usr/bin/nohup zsh install.sh >install.log 2>&1 &");
 		var processBuilder = new ProcessBuilder(command);
 		processBuilder.directory(workDir.toFile());
 		processBuilder.environment().put("CRYPTOMATOR_PID", String.valueOf(ProcessHandle.current().pid()));
