@@ -37,7 +37,7 @@ public class DmgUpdateMechanism extends DownloadUpdateMechanism {
 
 
 		// FIXME: remove this block! see https://github.com/cryptomator/cryptomator/issues/4058
-		if (currentVersion.startsWith("1.18.0-beta") && asset != null) {
+		if ((currentVersion.startsWith("1.19.0-alpha") || currentVersion.startsWith("1.19.0-beta")) && asset != null) {
 			return new DownloadUpdateInfo(this, updateVersion, asset);
 		}
 		// END FIXME
