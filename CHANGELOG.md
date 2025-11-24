@@ -9,6 +9,10 @@ Changes to prior versions can be found on the [Github release page](https://gith
 
 ## [Unreleased](https://github.com/cryptomator/integrations-mac/compare/1.4.1...HEAD)
 
+### Added
++ DMG Update Mechanism (#92)
+
+### Changed
 * Require JDK 25
 
 ## [1.4.1](https://github.com/cryptomator/integrations-mac/releases/tag/1.4.1) - 2025-09-18
