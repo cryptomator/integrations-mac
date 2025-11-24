@@ -92,7 +92,7 @@ public class DmgUpdateMechanism extends DownloadUpdateMechanism {
 			LOG.debug("Verified app: {}", workDir.resolve("Cryptomator.app"));
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
-			throw new InterruptedIOException("Failed to extract DMG, interrupted");
+			throw new InterruptedIOException("Code signature verification interrupted");
 		}
 		return UpdateStep.of(Localization.get().getString("org.cryptomator.macos.update.dmg.restarting"), () -> this.restart(workDir));
 	}
