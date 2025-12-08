@@ -14,6 +14,7 @@ Changes to prior versions can be found on the [Github release page](https://gith
 
 ### Changed
 * Require JDK 25
+* Pin Github action versions used in CI (#97)
 
 ## [1.4.1](https://github.com/cryptomator/integrations-mac/releases/tag/1.4.1) - 2025-09-18
 ### Added
