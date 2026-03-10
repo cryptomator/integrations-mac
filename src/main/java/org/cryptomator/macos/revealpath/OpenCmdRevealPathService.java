@@ -27,7 +27,7 @@ public class OpenCmdRevealPathService implements RevealPathService {
 			try (var reader = process.errorReader()) {
 				if (process.waitFor(5000, TimeUnit.MILLISECONDS)) {
 					int exitValue = process.exitValue();
-					if (process.exitValue() != 0) {
+					if (exitValue != 0) {
 						String error = reader.lines().collect(Collectors.joining());
 						throw new RevealFailedException("open command exited with value " + exitValue + " and error message: " + error);
 					}
