@@ -20,9 +20,10 @@ public class OpenCmdRevealPathService implements RevealPathService {
 
 	@Override
 	public void reveal(Path p) throws RevealFailedException {
+		Process process = null;
 		try {
 			var cmd = createCommandAsList(p);
-			final var process = new ProcessBuilder().command(cmd).start();
+			process = new ProcessBuilder().command(cmd).start();
 			try (var reader = process.errorReader()) {
 				if (process.waitFor(5000, TimeUnit.MILLISECONDS)) {
 					int exitValue = process.exitValue();
@@ -30,6 +31,8 @@ public class OpenCmdRevealPathService implements RevealPathService {
 						String error = reader.lines().collect(Collectors.joining());
 						throw new RevealFailedException("open command exited with value " + exitValue + " and error message: " + error);
 					}
+				} else {
+					throw new IOException("Command %s not completed after 5s.".formatted(cmd.toString()));
 				}
 			}
 		} catch (IOException e) {
@@ -37,6 +40,10 @@ public class OpenCmdRevealPathService implements RevealPathService {
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 			throw new RevealFailedException(e);
+		} finally {
+			if (process != null) {
+				process.destroyForcibly();
+			}
 		}
 	}
 
