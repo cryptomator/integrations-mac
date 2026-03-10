@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -20,9 +21,8 @@ public class OpenCmdRevealPathService implements RevealPathService {
 	@Override
 	public void reveal(Path p) throws RevealFailedException {
 		try {
-			var attrs = Files.readAttributes(p, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
-			ProcessBuilder pb = new ProcessBuilder().command("open", attrs.isDirectory() ? "" : "-R", p.toString());
-			var process = pb.start();
+			var cmd = createCommandAsList(p);
+			final var process = new ProcessBuilder().command(cmd).start();
 			try (var reader = process.errorReader()) {
 				if (process.waitFor(5000, TimeUnit.MILLISECONDS)) {
 					int exitValue = process.exitValue();
@@ -37,6 +37,15 @@ public class OpenCmdRevealPathService implements RevealPathService {
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 			throw new RevealFailedException(e);
+		}
+	}
+
+	private List<String> createCommandAsList(Path p) throws IOException {
+		var pathIsADirectory = Files.readAttributes(p, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS).isDirectory();
+		if (pathIsADirectory) {
+			return List.of("open", p.toString());
+		} else {
+			return List.of("open", "-R", p.toString());
 		}
 	}
 
