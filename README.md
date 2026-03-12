@@ -6,6 +6,5 @@ macOS-specific implementations of [integrations-api](https://github.com/cryptoma
 
 Since this project involves JNI, you need Java as well as Xcode build tools:
 
-* JDK 24
-* Maven
+* JDK 25
 * XCode Command Line Tools (run `xcode-select --install`)
