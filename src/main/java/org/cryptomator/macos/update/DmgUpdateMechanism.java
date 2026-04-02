@@ -35,14 +35,6 @@ public class DmgUpdateMechanism extends DownloadUpdateMechanism {
 		var updateVersion = response.latestVersion().macVersion();
 		var asset = response.assets().stream().filter(a -> a.name().endsWith(suffix)).findAny().orElse(null);
 
-
-		// FIXME: remove this block! see https://github.com/cryptomator/cryptomator/issues/4058
-		if (currentVersion.startsWith("1.18.0-beta") && asset != null) {
-			return new DownloadUpdateInfo(this, updateVersion, asset);
-		}
-		// END FIXME
-		
-
 		if (UpdateMechanism.isUpdateAvailable(updateVersion, currentVersion) && asset != null) {
 			return new DownloadUpdateInfo(this, updateVersion, asset);
 		} else {
