@@ -16,10 +16,14 @@ module org.cryptomator.integrations.mac {
 	requires org.cryptomator.integrations.api;
 	requires org.slf4j;
 
+	exports org.cryptomator.macos.tray to org.cryptomator.integrations.api;
 	provides AutoStartProvider with MacAutoStartProvider;
 	provides KeychainAccessProvider with MacSystemKeychainAccess, TouchIdKeychainAccess;
 	provides RevealPathService with OpenCmdRevealPathService;
 	provides TrayIntegrationProvider with MacTrayIntegrationProvider;
 	provides UiAppearanceProvider with MacUiAppearanceProvider;
 	provides UpdateMechanism with DmgUpdateMechanism;
+	provides org.cryptomator.integrations.tray.TrayMenuController
+			with org.cryptomator.macos.tray.MacTrayMenuController;
+
 }

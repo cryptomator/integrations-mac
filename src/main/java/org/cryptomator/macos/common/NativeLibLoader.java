@@ -20,6 +20,10 @@ public class NativeLibLoader {
 	 *
 	 * @throws UnsatisfiedLinkError If loading the library failed.
 	 */
+	public static boolean isLoaded() {
+		return loaded;
+	}
+
 	public static synchronized void loadLib() {
 		if (!loaded) {
 			try (var dll = NativeLibLoader.class.getResourceAsStream(LIB)) {
