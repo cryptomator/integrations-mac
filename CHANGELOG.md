@@ -9,8 +9,9 @@ Changes to prior versions can be found on the [Github release page](https://gith
 
 
 ## [Unreleased](https://github.com/cryptomator/integrations-mac/compare/1.5.0...HEAD)
-
-No changes yet.
+### Changed
+* Updated dependencies
+  - `org.cryptomator:integrations-api` from 1.8.0-beta1 to 1.8.0
 
 
 ## [1.5.0](https://github.com/cryptomator/integrations-mac/releases/1.5.0)
