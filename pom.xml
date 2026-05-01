@@ -51,7 +51,7 @@
 		<mvn-source.version>3.4.0</mvn-source.version>
 		<mvn-surefire.version>3.5.5</mvn-surefire.version>
 		<central-publishing.version>0.10.0</central-publishing.version>
-		<dependency-check.version>12.2.0</dependency-check.version>
+		<dependency-check.version>12.2.1</dependency-check.version>
 		<exec-maven.version>3.6.3</exec-maven.version>
 	</properties>
 
