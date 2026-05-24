@@ -49,6 +49,9 @@ public class MacTrayMenuController implements TrayMenuController {
 	private static byte[] loadPng(Consumer<TrayIconLoader> iconLoader) {
 		byte[][] holder = {null};
 		iconLoader.accept((TrayIconLoader.PngData) data -> holder[0] = data);
+		if (holder[0] == null) {
+			throw new IllegalStateException("Icon loader did not provide PNG data");
+		}
 		return holder[0];
 	}
 
