@@ -88,6 +88,8 @@ JNIEXPORT jint JNI_OnLoad(JavaVM *jvm, void *reserved) {
 
 JNIEXPORT void JNICALL Java_org_cryptomator_macos_tray_MacTrayMenuController_00024Native_showTrayIcon
 (JNIEnv *env, jobject obj, jbyteArray pngData, jstring tooltip, jobject defaultAction) {
+    // defaultAction is intentionally unused: this status item always presents its
+    // menu on click (see gStatusItem.menu below)
     jsize len = (*env)->GetArrayLength(env, pngData);
     jbyte *bytes = (*env)->GetByteArrayElements(env, pngData, NULL);
     NSData *imageData = [NSData dataWithBytes:bytes length:len];
