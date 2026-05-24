@@ -16,3 +16,6 @@ pom.xml.versionsBackup
 .idea/compiler.xml
 .idea/jarRepositories.xml
 *.iml
+
+# MacOS
+.DS_Store

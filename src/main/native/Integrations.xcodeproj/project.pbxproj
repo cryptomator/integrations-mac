@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06B9771B2FB9FC7200949F2E /* org_cryptomator_macos_tray_MacTrayMenuController_Native.m in Sources */ = {isa = PBXBuildFile; fileRef = 06B9771A2FB9FC7200949F2E /* org_cryptomator_macos_tray_MacTrayMenuController_Native.m */; };
 		74BEF1852C0384FB006731AC /* SKYLaunchService.m in Sources */ = {isa = PBXBuildFile; fileRef = 74BEF1842C0384FB006731AC /* SKYLaunchService.m */; };
 		74BEF1862C0384FB006731AC /* SKYLaunchService.h in Headers */ = {isa = PBXBuildFile; fileRef = 74BEF1832C0384FB006731AC /* SKYLaunchService.h */; };
 		74CF2E7B254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m in Sources */ = {isa = PBXBuildFile; fileRef = 74CF2E7A254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		06B9771A2FB9FC7200949F2E /* org_cryptomator_macos_tray_MacTrayMenuController_Native.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = org_cryptomator_macos_tray_MacTrayMenuController_Native.m; sourceTree = "<group>"; };
 		74BEF1832C0384FB006731AC /* SKYLaunchService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKYLaunchService.h; sourceTree = "<group>"; };
 		74BEF1842C0384FB006731AC /* SKYLaunchService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKYLaunchService.m; sourceTree = "<group>"; };
 		74CF2E7A254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = org_cryptomator_macos_autostart_MacLaunchServices_Native.m; sourceTree = "<group>"; };
@@ -49,6 +51,7 @@
 		9E0819AE1D748ECC000C89E6 = {
 			isa = PBXGroup;
 			children = (
+				06B9771A2FB9FC7200949F2E /* org_cryptomator_macos_tray_MacTrayMenuController_Native.m */,
 				74CF2E7A254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m */,
 				9E0819C71D75CABC000C89E6 /* org_cryptomator_macos_keychain_MacKeychain_Native.m */,
 				9EACB1B325557865000F3214 /* org_cryptomator_macos_tray_ActivationPolicy_Native.m */,
@@ -145,6 +148,7 @@
 				74BEF1852C0384FB006731AC /* SKYLaunchService.m in Sources */,
 				9EACB1B425557865000F3214 /* org_cryptomator_macos_tray_ActivationPolicy_Native.m in Sources */,
 				74CF2E7B254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m in Sources */,
+				06B9771B2FB9FC7200949F2E /* org_cryptomator_macos_tray_MacTrayMenuController_Native.m in Sources */,
 				9E21340C255429CA006EA872 /* SKYAppearanceObserver.m in Sources */,
 				9E21340025542735006EA872 /* org_cryptomator_macos_uiappearance_AppAppearance_Native.m in Sources */,
 				9E21341225542ECE006EA872 /* SKYAppearanceNotifier.m in Sources */,
