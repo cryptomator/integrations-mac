@@ -24,6 +24,10 @@ static void callRunnable(JNIEnv *env, jobject runnable) {
     jmethodID run = (*env)->GetMethodID(env, cls, "run", "()V");
     (*env)->CallVoidMethod(env, runnable, run);
     (*env)->DeleteLocalRef(env, cls);
+    if ((*env)->ExceptionCheck(env)) {
+        (*env)->ExceptionDescribe(env); // Log to stderr for debugging
+        (*env)->ExceptionClear(env);
+    }
 }
 
 @interface SKYActionHandler : NSObject
