@@ -1,6 +1,5 @@
 package org.cryptomator.macos.tray;
 
-import org.cryptomator.integrations.common.CheckAvailability;
 import org.cryptomator.integrations.common.OperatingSystem;
 import org.cryptomator.integrations.common.Priority;
 import org.cryptomator.integrations.tray.ActionItem;
@@ -17,13 +16,7 @@ import java.util.function.Consumer;
 
 @Priority(1000)
 @OperatingSystem(OperatingSystem.Value.MAC)
-@CheckAvailability
 public class MacTrayMenuController implements TrayMenuController {
-
-	@CheckAvailability
-	public static boolean isAvailable() {
-		return MacTrayMenuController.class.getResource("/libIntegrations.dylib") != null;
-	}
 
 	@Override
 	public void showTrayIcon(Consumer<TrayIconLoader> iconLoader, Runnable defaultAction, String tooltip) throws TrayMenuException {
