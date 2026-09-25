@@ -16,6 +16,7 @@ jobs:
     # dependeabot has on push events only read-only access, but codeql requires write access
     if: ${{ !(github.actor == 'dependabot[bot]' && contains(fromJSON('["push"]'), github.event_name)) }}
     permissions:
+      actions: read # Required for CodeQL to read the workflow run
       contents: read
       security-events: write
     steps:
