@@ -8,7 +8,7 @@ The changelog starts with version 1.4.1.
 Changes to prior versions can be found on the [Github release page](https://github.com/cryptomator/integrations-mac/releases).
 
 
-## [1.5.1](https://github.com/cryptomator/integrations-mac/releases/tag/1.5.1)
+## [1.5.1](https://github.com/cryptomator/integrations-mac/releases/tag/1.5.1) - 2026-10-06
 ### Added
 + Added translation for Lithuanian (lt) ([#111](https://github.com/cryptomator/integrations-mac/pull/111))
 
