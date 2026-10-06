@@ -9,9 +9,13 @@ Changes to prior versions can be found on the [Github release page](https://gith
 
 
 ## [Unreleased](https://github.com/cryptomator/integrations-mac/compare/1.5.0...HEAD)
+### Added
++ Added translation for Lithuanian (lt) ([#111](https://github.com/cryptomator/integrations-mac/pull/111))
+
 ### Changed
 * Updated dependencies
-  - `org.cryptomator:integrations-api` from 1.8.0-beta1 to 1.8.0
+  - `org.cryptomator:integrations-api` from 1.8.0-beta1 to 1.9.1
+  - `org.slf4j:slf4j-api` from 2.0.17 to 2.0.20
 
 
 ## [1.5.0](https://github.com/cryptomator/integrations-mac/releases/1.5.0)
