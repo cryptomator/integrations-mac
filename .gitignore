@@ -17,6 +17,3 @@ pom.xml.versionsBackup
 .idea/jarRepositories.xml
 *.iml
 .vscode/
-
-# MacOS
-.DS_Store

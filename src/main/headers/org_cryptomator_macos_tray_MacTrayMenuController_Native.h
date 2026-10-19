@@ -11,18 +11,26 @@ extern "C" {
 #define org_cryptomator_macos_tray_MacTrayMenuController_Native_ROOT_MENU 0LL
 /*
  * Class:     org_cryptomator_macos_tray_MacTrayMenuController_Native
- * Method:    showTrayIcon
- * Signature: ([BLjava/lang/String;Ljava/lang/Runnable;)V
+ * Method:    runOnMainThread
+ * Signature: (Ljava/lang/Runnable;)V
  */
-JNIEXPORT void JNICALL Java_org_cryptomator_macos_tray_MacTrayMenuController_00024Native_showTrayIcon
-  (JNIEnv *, jobject, jbyteArray, jstring, jobject);
+JNIEXPORT void JNICALL Java_org_cryptomator_macos_tray_MacTrayMenuController_00024Native_runOnMainThread
+  (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     org_cryptomator_macos_tray_MacTrayMenuController_Native
+ * Method:    showTrayIcon
+ * Signature: ([BLjava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_tray_MacTrayMenuController_00024Native_showTrayIcon
+  (JNIEnv *, jobject, jbyteArray, jstring);
 
 /*
  * Class:     org_cryptomator_macos_tray_MacTrayMenuController_Native
  * Method:    updateTrayIcon
- * Signature: ([B)V
+ * Signature: ([B)Z
  */
-JNIEXPORT void JNICALL Java_org_cryptomator_macos_tray_MacTrayMenuController_00024Native_updateTrayIcon
+JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_tray_MacTrayMenuController_00024Native_updateTrayIcon
   (JNIEnv *, jobject, jbyteArray);
 
 /*

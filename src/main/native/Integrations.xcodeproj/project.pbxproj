@@ -51,10 +51,10 @@
 		9E0819AE1D748ECC000C89E6 = {
 			isa = PBXGroup;
 			children = (
-				06B9771A2FB9FC7200949F2E /* org_cryptomator_macos_tray_MacTrayMenuController_Native.m */,
 				74CF2E7A254C295A006266D6 /* org_cryptomator_macos_autostart_MacLaunchServices_Native.m */,
 				9E0819C71D75CABC000C89E6 /* org_cryptomator_macos_keychain_MacKeychain_Native.m */,
 				9EACB1B325557865000F3214 /* org_cryptomator_macos_tray_ActivationPolicy_Native.m */,
+				06B9771A2FB9FC7200949F2E /* org_cryptomator_macos_tray_MacTrayMenuController_Native.m */,
 				9E2133FF25542735006EA872 /* org_cryptomator_macos_uiappearance_AppAppearance_Native.m */,
 				9E2134022554275D006EA872 /* org_cryptomator_macos_uiappearance_MacSystemAppearance_Native.m */,
 				9E21340F25542ECE006EA872 /* SKYAppearanceNotifier.h */,
