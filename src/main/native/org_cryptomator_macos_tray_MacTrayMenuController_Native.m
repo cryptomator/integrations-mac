@@ -108,16 +108,14 @@ JNIEXPORT jint JNI_OnLoad(JavaVM *jvm, void *reserved) {
 }
 
 JNIEXPORT void JNI_OnUnload(JavaVM *jvm, void *reserved) {
-	@autoreleasepool {
-		if (gBeforeOpenListener != NULL) {
-			JNIEnv *env = getEnv();
-			(*env)->DeleteGlobalRef(env, gBeforeOpenListener);
-			gBeforeOpenListener = NULL;
-		}
-		gMenuDelegate = nil;
-		gActionHandlers = nil;
-		gJvm = NULL;
+	if (gBeforeOpenListener != NULL) {
+		JNIEnv *env = getEnv();
+		(*env)->DeleteGlobalRef(env, gBeforeOpenListener);
+		gBeforeOpenListener = NULL;
 	}
+	gMenuDelegate = nil;
+	gActionHandlers = nil;
+	gJvm = NULL;
 }
 
 static void runOnMainThread(void (^block)(void)) {
@@ -193,10 +191,8 @@ JNIEXPORT void JNICALL Java_org_cryptomator_macos_tray_MacTrayMenuController_000
 JNIEXPORT void JNICALL Java_org_cryptomator_macos_tray_MacTrayMenuController_00024Native_clearMenu
 (JNIEnv *env, jobject obj) {
 	runOnMainThread((dispatch_block_t)^(void) {
-		@autoreleasepool {
-			[gRootMenu removeAllItems];
-			[gActionHandlers removeAllObjects];
-		}
+		[gRootMenu removeAllItems];
+		[gActionHandlers removeAllObjects];
 	});
 }
 
@@ -266,17 +262,13 @@ JNIEXPORT jlong JNICALL Java_org_cryptomator_macos_tray_MacTrayMenuController_00
 
 JNIEXPORT void JNICALL Java_org_cryptomator_macos_tray_MacTrayMenuController_00024Native_setBeforeOpenMenuListener
 (JNIEnv *env, jobject obj, jobject listener) {
-	@autoreleasepool {
-		jobject listenerRef = (*env)->NewGlobalRef(env, listener);
+	jobject listenerRef = (*env)->NewGlobalRef(env, listener);
 
-		runOnMainThread((dispatch_block_t)^(void) {
-			@autoreleasepool {
-				if (gBeforeOpenListener != NULL) {
-					JNIEnv *mainEnv = getEnv();
-					(*mainEnv)->DeleteGlobalRef(mainEnv, gBeforeOpenListener);
-				}
-				gBeforeOpenListener = listenerRef;
-			}
-		});
-	}
+	runOnMainThread((dispatch_block_t)^(void) {
+		if (gBeforeOpenListener != NULL) {
+			JNIEnv *mainEnv = getEnv();
+			(*mainEnv)->DeleteGlobalRef(mainEnv, gBeforeOpenListener);
+		}
+		gBeforeOpenListener = listenerRef;
+	});
 }
