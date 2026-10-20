@@ -20,7 +20,7 @@ class MacKeychain {
 	 * @param serviceName             Service name
 	 * @param account                 Unique account identifier
 	 * @param password                Passphrase to store
-	 * @param requireOsAuthentication Defines, whether the user needs to authenticate to load the stored passphrase. If <code>false</code>, an existing entry requiring authentication stays in place and still takes precedence when loading.
+	 * @param requireOsAuthentication Defines, whether the user needs to authenticate to load the stored passphrase. If <code>false</code>, an existing entry requiring authentication keeps its protection, and updating it requires the user to authenticate.
 	 * @see <a href="https://developer.apple.com/documentation/security/secitemadd(_:_:)">SecItemAdd</a>
 	 */
 	public void storePassword(String serviceName, String account, CharSequence password, boolean requireOsAuthentication) throws KeychainAccessException {

@@ -45,6 +45,11 @@ static NSDictionary* itemQuery(NSString *service, NSString *account, BOOL dataPr
 	};
 }
 
+// without an entitlement granting a keychain access group, the data protection keychain is unavailable, so depending on the operation, it reports either status:
+static BOOL isAbsentFromDataProtectionKeychain(OSStatus status) {
+	return status == errSecItemNotFound || status == errSecMissingEntitlement;
+}
+
 JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_storePassword(JNIEnv *env, jobject thisObj, jbyteArray service, jbyteArray key, jbyteArray password, jboolean requireOsAuthentication) {
 	NSString *serviceString = stringFromByteArray(env, service);
 	NSString *keyString = stringFromByteArray(env, key);
@@ -54,10 +59,10 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
 
 	if (serviceString && keyString && pwStr) {
 		NSData *passwordData = [NSData dataWithBytes:pwStr length:(*env)->GetArrayLength(env, password)];
+		BOOL protectedItemStored = NO;
 		if (requireOsAuthentication) {
 			id accessControl = (__bridge_transfer id)SecAccessControlCreateWithFlags(kCFAllocatorDefault, kSecAttrAccessibleWhenUnlocked, kSecAccessControlUserPresence, NULL);
 			if (accessControl) {
-				// replace a protected item, but remove an unprotected one only after adding succeeded, so that a failed add never loses it:
 				NSDictionary *protectedQuery = itemQuery(serviceString, keyString, YES);
 				status = SecItemDelete((__bridge CFDictionaryRef)protectedQuery);
 				if (status == errSecSuccess || status == errSecItemNotFound) {
@@ -66,20 +71,30 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
 					attributes[(__bridge id)kSecAttrAccessControl] = accessControl;
 					status = SecItemAdd((__bridge CFDictionaryRef)attributes, NULL);
 				}
-				if (status == errSecSuccess) {
-					OSStatus deleteStatus = SecItemDelete((__bridge CFDictionaryRef)itemQuery(serviceString, keyString, NO));
-					if (deleteStatus != errSecItemNotFound) {
-						status = deleteStatus;
-					}
-				}
+				protectedItemStored = status == errSecSuccess;
 			}
 		} else {
-			NSDictionary *query = itemQuery(serviceString, keyString, NO);
-			status = SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)@{(__bridge id)kSecValueData: passwordData});
-			if (status == errSecItemNotFound) {
-				NSMutableDictionary *attributes = [query mutableCopy];
-				attributes[(__bridge id)kSecValueData] = passwordData;
-				status = SecItemAdd((__bridge CFDictionaryRef)attributes, NULL);
+			// an existing protected item takes precedence when loading, so update it in place. The update keeps its protection and requires the user to authenticate:
+			NSDictionary *valueAttributes = @{(__bridge id)kSecValueData: passwordData};
+			NSMutableDictionary *protectedQuery = [itemQuery(serviceString, keyString, YES) mutableCopy];
+			protectedQuery[(__bridge id)kSecUseAuthenticationContext] = getSharedLAContext();
+			status = SecItemUpdate((__bridge CFDictionaryRef)protectedQuery, (__bridge CFDictionaryRef)valueAttributes);
+			protectedItemStored = status == errSecSuccess;
+			if (isAbsentFromDataProtectionKeychain(status)) {
+				NSDictionary *query = itemQuery(serviceString, keyString, NO);
+				status = SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)valueAttributes);
+				if (status == errSecItemNotFound) {
+					NSMutableDictionary *attributes = [query mutableCopy];
+					attributes[(__bridge id)kSecValueData] = passwordData;
+					status = SecItemAdd((__bridge CFDictionaryRef)attributes, NULL);
+				}
+			}
+		}
+		if (protectedItemStored) {
+			// delete the unprotected item only once the protected one is stored, so that a failed store never loses the password:
+			OSStatus deleteStatus = SecItemDelete((__bridge CFDictionaryRef)itemQuery(serviceString, keyString, NO));
+			if (deleteStatus != errSecItemNotFound) {
+				status = deleteStatus;
 			}
 		}
 		if (status != errSecSuccess) {
@@ -113,7 +128,7 @@ JNIEXPORT jobject JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024N
 		status = SecItemCopyMatching((__bridge CFDictionaryRef)query, &result);
 		if (status == errSecSuccess) {
 			dataProtectionKeychain = JNI_TRUE;
-		} else if (status == errSecItemNotFound || status == errSecMissingEntitlement) {
+		} else if (isAbsentFromDataProtectionKeychain(status)) {
 			query[(__bridge id)kSecUseDataProtectionKeychain] = @NO;
 			status = SecItemCopyMatching((__bridge CFDictionaryRef)query, &result);
 		}
