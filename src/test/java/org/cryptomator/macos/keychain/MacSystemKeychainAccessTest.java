@@ -49,7 +49,7 @@ public class MacSystemKeychainAccessTest {
 	@Test
 	@DisplayName("loadPassphrase() succeeds")
 	public void testLoadSuccess() throws KeychainAccessException {
-		Mockito.when(keychain.loadPassword("Cryptomator", "key")).thenReturn("pass".toCharArray());
+		Mockito.when(keychain.loadPassword("Cryptomator", "key")).thenReturn(new MacKeychain.StoredPassword("pass".toCharArray(), false));
 
 		char[] result = keychainAccess.loadPassphrase("key");
 

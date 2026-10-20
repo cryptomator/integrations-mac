@@ -13,6 +13,7 @@ Changes to prior versions can be found on the [Github release page](https://gith
 * Require macOS 11
 
 ### Fixed
+* Touch ID keychain entries that were stored without authentication are now protected when loaded
 * Possible out-of-bounds read when converting keychain service and account names
 
 

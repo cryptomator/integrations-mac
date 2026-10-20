@@ -20,8 +20,8 @@ class MacKeychain {
 	 * @param serviceName             Service name
 	 * @param account                 Unique account identifier
 	 * @param password                Passphrase to store
-	 * @param requireOsAuthentication Defines, whether the user needs to authenticate to store a passphrase
-	 * @see <a href="https://developer.apple.com/documentation/security/1398366-seckeychainaddgenericpassword">SecKeychainAddGenericPassword</a>
+	 * @param requireOsAuthentication Defines, whether the user needs to authenticate to load the stored passphrase. If <code>false</code>, an existing entry requiring authentication stays in place and still takes precedence when loading.
+	 * @see <a href="https://developer.apple.com/documentation/security/secitemadd(_:_:)">SecItemAdd</a>
 	 */
 	public void storePassword(String serviceName, String account, CharSequence password, boolean requireOsAuthentication) throws KeychainAccessException {
 		ByteBuffer pwBuf = UTF_8.encode(CharBuffer.wrap(password));
@@ -44,12 +44,12 @@ class MacKeychain {
 	 * @throws KeychainAccessException If loading fails for any reason other than a missing entry, e.g. because authentication was cancelled
 	 * @see <a href="https://developer.apple.com/documentation/security/secitemcopymatching(_:_:)">SecItemCopyMatching</a>
 	 */
-	public char[] loadPassword(String serviceName, String account) throws KeychainAccessException {
-		return toPassword(Native.INSTANCE.loadPassword(serviceName.getBytes(UTF_8), account.getBytes(UTF_8)));
+	public StoredPassword loadPassword(String serviceName, String account) throws KeychainAccessException {
+		return toStoredPassword(Native.INSTANCE.loadPassword(serviceName.getBytes(UTF_8), account.getBytes(UTF_8)));
 	}
 
 	// visible for testing
-	static char[] toPassword(LoadResult result) throws KeychainAccessException {
+	static StoredPassword toStoredPassword(LoadResult result) throws KeychainAccessException {
 		if (result.status() == OSSTATUS_NOT_FOUND) {
 			return null;
 		} else if (result.status() != OSSTATUS_SUCCESS || result.password() == null) {
@@ -61,7 +61,7 @@ class MacKeychain {
 		pwBuf.get(pw);
 		Arrays.fill(pwBytes, (byte) 0x00);
 		Arrays.fill(pwBuf.array(), (char) 0x00);
-		return pw;
+		return new StoredPassword(pw, result.dataProtectionKeychain());
 	}
 
 	/**
@@ -92,8 +92,14 @@ class MacKeychain {
 		return Native.INSTANCE.isTouchIDavailable();
 	}
 
+	/**
+	 * @param requiresOsAuthentication Whether the keychain entry is stored in the data protection keychain, where {@link #storePassword(String, String, CharSequence, boolean)} only stores entries requiring user presence
+	 */
+	record StoredPassword(char[] value, boolean requiresOsAuthentication) {
+	}
+
 	// constructed via JNI by class name and constructor signature, so renaming or reordering its components breaks the native loadPassword
-	record LoadResult(int status, byte[] password) {
+	record LoadResult(int status, byte[] password, boolean dataProtectionKeychain) {
 	}
 
 	// initialization-on-demand pattern, as loading the .dylib is an expensive operation

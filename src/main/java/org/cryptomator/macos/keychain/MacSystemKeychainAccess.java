@@ -37,7 +37,8 @@ public class MacSystemKeychainAccess implements KeychainAccessProvider {
 
 	@Override
 	public char[] loadPassphrase(String key) throws KeychainAccessException {
-		return keychain.loadPassword(SERVICE_NAME, key);
+		var password = keychain.loadPassword(SERVICE_NAME, key);
+		return password != null ? password.value() : null;
 	}
 
 	@Override

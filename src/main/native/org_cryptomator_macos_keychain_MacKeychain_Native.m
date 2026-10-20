@@ -34,7 +34,7 @@ static NSString* stringFromByteArray(JNIEnv *env, jbyteArray array) {
 	return string;
 }
 
-// Items requiring user presence live in the data protection keychain, all others in the file-based keychain. Loading targets one of them explicitly,
+// Items requiring user presence live in the data protection keychain, all others in the file-based keychain. Storing and loading target one of them explicitly,
 // because a query spanning both reports a failed authentication in the data protection keychain as errSecItemNotFound.
 static NSDictionary* itemQuery(NSString *service, NSString *account, BOOL dataProtectionKeychain) {
 	return @{
@@ -53,41 +53,36 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
 	OSStatus status = errSecParam;
 
 	if (serviceString && keyString && pwStr) {
-		jsize length = (*env)->GetArrayLength(env, password);
-		// find existing:
-		NSMutableDictionary *query = [@{
-			(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
-			(__bridge id)kSecAttrService: serviceString,
-			(__bridge id)kSecAttrAccount: keyString,
-			(__bridge id)kSecReturnAttributes: @YES,
-			(__bridge id)kSecReturnData: @YES,
-			(__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne
-		} mutableCopy];
+		NSData *passwordData = [NSData dataWithBytes:pwStr length:(*env)->GetArrayLength(env, password)];
 		if (requireOsAuthentication) {
-			LAContext *context = getSharedLAContext();
-			query[(__bridge id)kSecUseAuthenticationContext] = context;
-		}
-		CFDictionaryRef result = NULL;
-		status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef *)&result);
-		if (status == errSecSuccess && result != NULL) {
-			// update existing:
-			NSDictionary *attributesToUpdate = @{
-				(__bridge id)kSecValueData: [NSData dataWithBytes:pwStr length:length]
-			};
-			status = SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)attributesToUpdate);
-		} else if (status == errSecItemNotFound) {
-			// add new:
-			NSMutableDictionary *attributes = [@{
-				(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
-				(__bridge id)kSecAttrService: serviceString,
-				(__bridge id)kSecAttrAccount: keyString,
-				(__bridge id)kSecValueData: [NSData dataWithBytes:pwStr length:length]
-			} mutableCopy];
-			if (requireOsAuthentication) {
-				attributes[(__bridge id)kSecAttrAccessControl] = (__bridge_transfer id)SecAccessControlCreateWithFlags(kCFAllocatorDefault, kSecAttrAccessibleWhenUnlocked, kSecAccessControlUserPresence, NULL);
+			id accessControl = (__bridge_transfer id)SecAccessControlCreateWithFlags(kCFAllocatorDefault, kSecAttrAccessibleWhenUnlocked, kSecAccessControlUserPresence, NULL);
+			if (accessControl) {
+				// replace a protected item, but remove an unprotected one only after adding succeeded, so that a failed add never loses it:
+				NSDictionary *protectedQuery = itemQuery(serviceString, keyString, YES);
+				status = SecItemDelete((__bridge CFDictionaryRef)protectedQuery);
+				if (status == errSecSuccess || status == errSecItemNotFound) {
+					NSMutableDictionary *attributes = [protectedQuery mutableCopy];
+					attributes[(__bridge id)kSecValueData] = passwordData;
+					attributes[(__bridge id)kSecAttrAccessControl] = accessControl;
+					status = SecItemAdd((__bridge CFDictionaryRef)attributes, NULL);
+				}
+				if (status == errSecSuccess) {
+					OSStatus deleteStatus = SecItemDelete((__bridge CFDictionaryRef)itemQuery(serviceString, keyString, NO));
+					if (deleteStatus != errSecItemNotFound) {
+						status = deleteStatus;
+					}
+				}
 			}
-			status = SecItemAdd((__bridge CFDictionaryRef)attributes, NULL);
 		} else {
+			NSDictionary *query = itemQuery(serviceString, keyString, NO);
+			status = SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)@{(__bridge id)kSecValueData: passwordData});
+			if (status == errSecItemNotFound) {
+				NSMutableDictionary *attributes = [query mutableCopy];
+				attributes[(__bridge id)kSecValueData] = passwordData;
+				status = SecItemAdd((__bridge CFDictionaryRef)attributes, NULL);
+			}
+		}
+		if (status != errSecSuccess) {
 			NSLog(@"Error storing item in keychain. Status code: %d", (int)status);
 		}
 	} else {
@@ -106,6 +101,7 @@ JNIEXPORT jobject JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024N
 
 	OSStatus status = errSecParam;
 	NSData *passwordData = nil;
+	jboolean dataProtectionKeychain = JNI_FALSE;
 
 	if (serviceString && keyString) { // guard both NSStrings not to be NIL
 		// find existing, preferring the protected item:
@@ -115,7 +111,9 @@ JNIEXPORT jobject JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024N
 		query[(__bridge id)kSecUseAuthenticationContext] = getSharedLAContext();
 		CFTypeRef result = NULL;
 		status = SecItemCopyMatching((__bridge CFDictionaryRef)query, &result);
-		if (status == errSecItemNotFound || status == errSecMissingEntitlement) {
+		if (status == errSecSuccess) {
+			dataProtectionKeychain = JNI_TRUE;
+		} else if (status == errSecItemNotFound || status == errSecMissingEntitlement) {
 			query[(__bridge id)kSecUseDataProtectionKeychain] = @NO;
 			status = SecItemCopyMatching((__bridge CFDictionaryRef)query, &result);
 		}
@@ -143,11 +141,11 @@ JNIEXPORT jobject JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024N
 	if (resultClass == NULL) {
 		return NULL;
 	}
-	jmethodID resultConstructor = (*env)->GetMethodID(env, resultClass, "<init>", "(I[B)V");
+	jmethodID resultConstructor = (*env)->GetMethodID(env, resultClass, "<init>", "(I[BZ)V");
 	if (resultConstructor == NULL) {
 		return NULL;
 	}
-	return (*env)->NewObject(env, resultClass, resultConstructor, (jint)status, password);
+	return (*env)->NewObject(env, resultClass, resultConstructor, (jint)status, password, dataProtectionKeychain);
 }
 
 JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_deletePassword(JNIEnv *env, jobject thisObj, jbyteArray service, jbyteArray key) {
