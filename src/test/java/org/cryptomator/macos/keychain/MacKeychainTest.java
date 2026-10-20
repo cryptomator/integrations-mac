@@ -10,6 +10,21 @@ public class MacKeychainTest {
 
 	private final MacKeychain keychain = new MacKeychain();
 
+	@Test
+	public void testLoadResultNotFound() throws KeychainAccessException {
+		Assertions.assertNull(MacKeychain.toPassword(new MacKeychain.LoadResult(-25300, null)));
+	}
+
+	@Test
+	public void testLoadResultError() {
+		Assertions.assertThrows(KeychainAccessException.class, () -> MacKeychain.toPassword(new MacKeychain.LoadResult(-128, null)));
+	}
+
+	@Test
+	public void testLoadResultWithoutPassword() {
+		Assertions.assertThrows(KeychainAccessException.class, () -> MacKeychain.toPassword(new MacKeychain.LoadResult(0, null)));
+	}
+
 	@Nested
 	public class WithStoredPassword {
 
@@ -21,25 +36,32 @@ public class MacKeychainTest {
 		}
 
 		@Test
-		public void testLoadWithInvalidAccount() {
+		public void testLoadWithInvalidAccount() throws KeychainAccessException {
 			char[] loadedPw = keychain.loadPassword("service", "wrong");
 			Assertions.assertNull(loadedPw);
 		}
 
 		@Test
-		public void testLoadWithInvalidService() {
+		public void testLoadWithInvalidService() throws KeychainAccessException {
 			char[] loadedPw = keychain.loadPassword("wrong", "account");
 			Assertions.assertNull(loadedPw);
 		}
 
 		@Test
-		public void testLoad() {
+		public void testLoad() throws KeychainAccessException {
 			char[] loadedPw = keychain.loadPassword("service", "account");
 			Assertions.assertArrayEquals(storedPw.toCharArray(), loadedPw);
 		}
 
 		@Test
-		public void testDelete() {
+		public void testOverwrite() throws KeychainAccessException {
+			keychain.storePassword("service", "account", "0ther pw", false);
+			char[] loadedPw = keychain.loadPassword("service", "account");
+			Assertions.assertArrayEquals("0ther pw".toCharArray(), loadedPw);
+		}
+
+		@Test
+		public void testDelete() throws KeychainAccessException {
 			Assertions.assertDoesNotThrow(() -> keychain.deletePassword("service", "account"));
 			char[] deletedPw = keychain.loadPassword("service", "account");
 			Assertions.assertNull(deletedPw);

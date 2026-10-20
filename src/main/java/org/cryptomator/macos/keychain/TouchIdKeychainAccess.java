@@ -37,7 +37,7 @@ public class TouchIdKeychainAccess implements KeychainAccessProvider {
 	}
 
 	@Override
-	public char[] loadPassphrase(String key) {
+	public char[] loadPassphrase(String key) throws KeychainAccessException {
 		return keychain.loadPassword(SERVICE_NAME, key);
 	}
 

@@ -20,18 +20,40 @@ static LAContext* getSharedLAContext(void) {
 	return sharedContext;
 }
 
-JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_storePassword(JNIEnv *env, jobject thisObj, jbyteArray service, jbyteArray key, jbyteArray password, jboolean requireOsAuthentication) {
-	jbyte *serviceStr = (*env)->GetByteArrayElements(env, service, NULL);
-	jbyte *keyStr = (*env)->GetByteArrayElements(env, key, NULL);
-	jbyte *pwStr = (*env)->GetByteArrayElements(env, password, NULL);
-	jsize length = (*env)->GetArrayLength(env, password);
+// returns nil without further JNI calls, if a previous call left an exception pending
+static NSString* stringFromByteArray(JNIEnv *env, jbyteArray array) {
+	if ((*env)->ExceptionCheck(env)) {
+		return nil;
+	}
+	jbyte *bytes = (*env)->GetByteArrayElements(env, array, NULL);
+	if (bytes == NULL) {
+		return nil;
+	}
+	NSString *string = [[NSString alloc] initWithBytes:bytes length:(*env)->GetArrayLength(env, array) encoding:NSUTF8StringEncoding];
+	(*env)->ReleaseByteArrayElements(env, array, bytes, JNI_ABORT);
+	return string;
+}
 
-	NSString *serviceString = [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding];
-	NSString *keyString = [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding];
+// Items requiring user presence live in the data protection keychain, all others in the file-based keychain. Loading targets one of them explicitly,
+// because a query spanning both reports a failed authentication in the data protection keychain as errSecItemNotFound.
+static NSDictionary* itemQuery(NSString *service, NSString *account, BOOL dataProtectionKeychain) {
+	return @{
+		(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
+		(__bridge id)kSecAttrService: service,
+		(__bridge id)kSecAttrAccount: account,
+		(__bridge id)kSecUseDataProtectionKeychain: @(dataProtectionKeychain)
+	};
+}
+
+JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_storePassword(JNIEnv *env, jobject thisObj, jbyteArray service, jbyteArray key, jbyteArray password, jboolean requireOsAuthentication) {
+	NSString *serviceString = stringFromByteArray(env, service);
+	NSString *keyString = stringFromByteArray(env, key);
+	jbyte *pwStr = (*env)->ExceptionCheck(env) ? NULL : (*env)->GetByteArrayElements(env, password, NULL);
 
 	OSStatus status = errSecParam;
 
-	if (serviceString && keyString) { // guard both NSStrings not to be NIL
+	if (serviceString && keyString && pwStr) {
+		jsize length = (*env)->GetArrayLength(env, password);
 		// find existing:
 		NSMutableDictionary *query = [@{
 			(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
@@ -69,67 +91,73 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
 			NSLog(@"Error storing item in keychain. Status code: %d", (int)status);
 		}
 	} else {
-		NSLog(@"Invalid UTF-8 input: service or key string conversion failed");
+		NSLog(@"Invalid input: service or key string conversion failed or password unavailable");
 	}
 
-	(*env)->ReleaseByteArrayElements(env, service, serviceStr, JNI_ABORT);
-	(*env)->ReleaseByteArrayElements(env, key, keyStr, JNI_ABORT);
-	(*env)->ReleaseByteArrayElements(env, password, pwStr, JNI_ABORT);
+	if (pwStr) {
+		(*env)->ReleaseByteArrayElements(env, password, pwStr, JNI_ABORT);
+	}
 	return status;
 }
 
-JNIEXPORT jbyteArray JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_loadPassword(JNIEnv *env, jobject thisObj, jbyteArray service, jbyteArray key) {
-	jbyte *serviceStr = (*env)->GetByteArrayElements(env, service, NULL);
-	jbyte *keyStr = (*env)->GetByteArrayElements(env, key, NULL);
+JNIEXPORT jobject JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_loadPassword(JNIEnv *env, jobject thisObj, jbyteArray service, jbyteArray key) {
+	NSString *serviceString = stringFromByteArray(env, service);
+	NSString *keyString = stringFromByteArray(env, key);
 
-	NSString *serviceString = [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding];
-	NSString *keyString = [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding];
-
-	jbyteArray password = NULL;
+	OSStatus status = errSecParam;
+	NSData *passwordData = nil;
 
 	if (serviceString && keyString) { // guard both NSStrings not to be NIL
-		// find existing:
-		LAContext *context = getSharedLAContext();
-		NSDictionary *query = @{
-			(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
-			(__bridge id)kSecAttrService: serviceString,
-			(__bridge id)kSecAttrAccount: keyString,
-			(__bridge id)kSecReturnAttributes: @YES,
-			(__bridge id)kSecReturnData: @YES,
-			(__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne,
-			(__bridge id)kSecUseAuthenticationContext: context
-		};
-		CFDictionaryRef result = NULL;
-		OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef *)&result);
+		// find existing, preferring the protected item:
+		NSMutableDictionary *query = [itemQuery(serviceString, keyString, YES) mutableCopy];
+		query[(__bridge id)kSecReturnData] = @YES;
+		query[(__bridge id)kSecMatchLimit] = (__bridge id)kSecMatchLimitOne;
+		query[(__bridge id)kSecUseAuthenticationContext] = getSharedLAContext();
+		CFTypeRef result = NULL;
+		status = SecItemCopyMatching((__bridge CFDictionaryRef)query, &result);
+		if (status == errSecItemNotFound || status == errSecMissingEntitlement) {
+			query[(__bridge id)kSecUseDataProtectionKeychain] = @NO;
+			status = SecItemCopyMatching((__bridge CFDictionaryRef)query, &result);
+		}
 		if (status == errSecSuccess && result != NULL) {
-			// retrieve password:
-			NSDictionary *attributes = (__bridge_transfer NSDictionary *)result;
-			NSData *passwordData = attributes[(__bridge id)kSecValueData];
-			password = (*env)->NewByteArray(env, (int)passwordData.length);
-			(*env)->SetByteArrayRegion(env, password, 0, (int)passwordData.length, (jbyte *)passwordData.bytes);
+			passwordData = (__bridge_transfer NSData *)result;
 		} else if (status != errSecItemNotFound) {
 			NSLog(@"Error retrieving item from keychain. Status code: %d", (int)status);
 		}
 	} else {
-		NSLog(@"Invalid UTF-8 input: service or key string conversion failed");
+		NSLog(@"Invalid input: service or key string conversion failed");
 	}
 
-	(*env)->ReleaseByteArrayElements(env, service, serviceStr, JNI_ABORT);
-	(*env)->ReleaseByteArrayElements(env, key, keyStr, JNI_ABORT);
-	return password;
+	if ((*env)->ExceptionCheck(env)) {
+		return NULL;
+	}
+	jbyteArray password = NULL;
+	if (passwordData) {
+		password = (*env)->NewByteArray(env, (int)passwordData.length);
+		if (password == NULL) {
+			return NULL;
+		}
+		(*env)->SetByteArrayRegion(env, password, 0, (int)passwordData.length, (jbyte *)passwordData.bytes);
+	}
+	jclass resultClass = (*env)->FindClass(env, "org/cryptomator/macos/keychain/MacKeychain$LoadResult");
+	if (resultClass == NULL) {
+		return NULL;
+	}
+	jmethodID resultConstructor = (*env)->GetMethodID(env, resultClass, "<init>", "(I[B)V");
+	if (resultConstructor == NULL) {
+		return NULL;
+	}
+	return (*env)->NewObject(env, resultClass, resultConstructor, (jint)status, password);
 }
 
 JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_deletePassword(JNIEnv *env, jobject thisObj, jbyteArray service, jbyteArray key) {
-	jbyte *serviceStr = (*env)->GetByteArrayElements(env, service, NULL);
-	jbyte *keyStr = (*env)->GetByteArrayElements(env, key, NULL);
-
-	NSString *serviceString = [NSString stringWithCString:(char *)serviceStr encoding:NSUTF8StringEncoding];
-	NSString *keyString = [NSString stringWithCString:(char *)keyStr encoding:NSUTF8StringEncoding];
+	NSString *serviceString = stringFromByteArray(env, service);
+	NSString *keyString = stringFromByteArray(env, key);
 
 	OSStatus status = errSecParam;
 
 	if (serviceString && keyString) { // guard both NSStrings not to be NIL
-		// find existing:
+		// spans both keychains on purpose, removing protected and unprotected items alike:
 		LAContext *context = getSharedLAContext();
 		NSDictionary *query = @{
 			(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
@@ -142,11 +170,9 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
 			NSLog(@"Error deleting item from keychain. Status code: %d", (int)status);
 		}
 	} else {
-		NSLog(@"Invalid UTF-8 input: service or key string conversion failed");
+		NSLog(@"Invalid input: service or key string conversion failed");
 	}
 
-	(*env)->ReleaseByteArrayElements(env, service, serviceStr, JNI_ABORT);
-	(*env)->ReleaseByteArrayElements(env, key, keyStr, JNI_ABORT);
 	return status;
 }
 

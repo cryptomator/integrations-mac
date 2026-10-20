@@ -40,49 +40,28 @@ class MacKeychain {
 	 *
 	 * @param serviceName Service name
 	 * @param account     Unique account identifier
-	 * @return password or <code>null</code> if no such keychain entry could be loaded from the keychain.
-	 * @see <a href="https://developer.apple.com/documentation/security/1397301-seckeychainfindgenericpassword">SecKeychainFindGenericPassword</a>
+	 * @return password or <code>null</code> if no such keychain entry exists.
+	 * @throws KeychainAccessException If loading fails for any reason other than a missing entry, e.g. because authentication was cancelled
+	 * @see <a href="https://developer.apple.com/documentation/security/secitemcopymatching(_:_:)">SecItemCopyMatching</a>
 	 */
-	public char[] loadPassword(String serviceName, String account) {
-		byte[] pwBytes = Native.INSTANCE.loadPassword(serviceName.getBytes(UTF_8), account.getBytes(UTF_8));
-		if (pwBytes == null) {
-			// this if-statement is a workaround for https://github.com/cryptomator/integrations-mac/issues/13:
-			if ("Cryptomator".equals(serviceName) && tryMigratePassword(account)) {
-				// on success: retry
-				return loadPassword(serviceName, account);
-			}
-			return null;
-		} else {
-			CharBuffer pwBuf = UTF_8.decode(ByteBuffer.wrap(pwBytes));
-			char[] pw = new char[pwBuf.remaining()];
-			pwBuf.get(pw);
-			Arrays.fill(pwBytes, (byte) 0x00);
-			Arrays.fill(pwBuf.array(), (char) 0x00);
-			return pw;
-		}
+	public char[] loadPassword(String serviceName, String account) throws KeychainAccessException {
+		return toPassword(Native.INSTANCE.loadPassword(serviceName.getBytes(UTF_8), account.getBytes(UTF_8)));
 	}
 
-	/**
-	 * Fix for <a href="https://github.com/cryptomator/integrations-mac/issues/13">Issue 13</a>.
-	 * Attempts to find the account with the old hard-coded service name 'Cryptomator\0'
-	 *
-	 * @param account Unique account identifier
-	 * @return <code>true</code> on success
-	 */
-	private boolean tryMigratePassword(String account) {
-		byte[] oldServiceName = {'C', 'r', 'y', 'p', 't', 'o', 'm', 'a', 't', 'o', 'r', '\0'};
-		byte[] newServiceName = {'C', 'r', 'y', 'p', 't', 'o', 'm', 'a', 't', 'o', 'r'};
-		byte[] pwBytes = Native.INSTANCE.loadPassword(oldServiceName, account.getBytes(UTF_8));
-		if (pwBytes == null) {
-			return false;
+	// visible for testing
+	static char[] toPassword(LoadResult result) throws KeychainAccessException {
+		if (result.status() == OSSTATUS_NOT_FOUND) {
+			return null;
+		} else if (result.status() != OSSTATUS_SUCCESS || result.password() == null) {
+			throw new KeychainAccessException("Failed to load password. Error code " + result.status());
 		}
-		int errorCode = Native.INSTANCE.storePassword(newServiceName, account.getBytes(UTF_8), pwBytes, false);
+		byte[] pwBytes = result.password();
+		CharBuffer pwBuf = UTF_8.decode(ByteBuffer.wrap(pwBytes));
+		char[] pw = new char[pwBuf.remaining()];
+		pwBuf.get(pw);
 		Arrays.fill(pwBytes, (byte) 0x00);
-		if (errorCode != OSSTATUS_SUCCESS) {
-			return false;
-		}
-		Native.INSTANCE.deletePassword(oldServiceName, account.getBytes(UTF_8));
-		return true;
+		Arrays.fill(pwBuf.array(), (char) 0x00);
+		return pw;
 	}
 
 	/**
@@ -91,7 +70,7 @@ class MacKeychain {
 	 * @param serviceName Service name
 	 * @param account     Unique account identifier
 	 * @return <code>true</code> if the passwords has been deleted, <code>false</code> if no entry for the given key exists.
-	 * @see <a href="https://developer.apple.com/documentation/security/1395547-secitemdelete">SecKeychainItemDelete</a>
+	 * @see <a href="https://developer.apple.com/documentation/security/secitemdelete(_:)">SecItemDelete</a>
 	 */
 	public boolean deletePassword(String serviceName, String account) throws KeychainAccessException {
 		int errorCode = Native.INSTANCE.deletePassword(serviceName.getBytes(UTF_8), account.getBytes(UTF_8));
@@ -113,6 +92,10 @@ class MacKeychain {
 		return Native.INSTANCE.isTouchIDavailable();
 	}
 
+	// constructed via JNI by class name and constructor signature, so renaming or reordering its components breaks the native loadPassword
+	record LoadResult(int status, byte[] password) {
+	}
+
 	// initialization-on-demand pattern, as loading the .dylib is an expensive operation
 	private static class Native {
 		static final Native INSTANCE = new Native();
@@ -123,7 +106,7 @@ class MacKeychain {
 
 		public native int storePassword(byte[] service, byte[] account, byte[] value, boolean requireOsAuthentication);
 
-		public native byte[] loadPassword(byte[] service, byte[] account);
+		public native LoadResult loadPassword(byte[] service, byte[] account);
 
 		public native int deletePassword(byte[] service, byte[] account);
 

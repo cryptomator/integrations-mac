@@ -48,7 +48,7 @@ public class MacSystemKeychainAccessTest {
 
 	@Test
 	@DisplayName("loadPassphrase() succeeds")
-	public void testLoadSuccess() {
+	public void testLoadSuccess() throws KeychainAccessException {
 		Mockito.when(keychain.loadPassword("Cryptomator", "key")).thenReturn("pass".toCharArray());
 
 		char[] result = keychainAccess.loadPassphrase("key");
@@ -58,12 +58,24 @@ public class MacSystemKeychainAccessTest {
 
 	@Test
 	@DisplayName("loadPassphrase() doesn't find pw")
-	public void testLoadNotFound() {
+	public void testLoadNotFound() throws KeychainAccessException {
 		Mockito.when(keychain.loadPassword("Cryptomator", "key")).thenReturn(null);
 
 		char[] result = keychainAccess.loadPassphrase("key");
 
 		Assertions.assertNull(result);
+	}
+
+	@Test
+	@DisplayName("loadPassphrase() fails")
+	public void testLoadError() throws KeychainAccessException {
+		KeychainAccessException e = new KeychainAccessException("fail.");
+		Mockito.when(keychain.loadPassword("Cryptomator", "key")).thenThrow(e);
+
+		KeychainAccessException thrown = Assertions.assertThrows(KeychainAccessException.class, () -> {
+			keychainAccess.loadPassphrase("key");
+		});
+		Assertions.assertSame(thrown, e);
 	}
 
 	@Test
