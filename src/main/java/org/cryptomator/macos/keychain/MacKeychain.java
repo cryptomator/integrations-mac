@@ -84,12 +84,12 @@ class MacKeychain {
 	}
 
 	/**
-	 * Tests whether biometric authentication via Touch ID is supported and allowed on the device
+	 * Tests whether the user can authenticate via Touch ID or, as a fallback, their password. Also tests whether passwords requiring such authentication can be stored.
 	 *
-	 * @return <code>true</code> if biometric authentication is available, <code>false</code> otherwise
+	 * @return <code>true</code> if passwords requiring user authentication are supported, <code>false</code> otherwise
 	 */
-	public boolean isTouchIDavailable() {
-		return Native.INSTANCE.isTouchIDavailable();
+	public boolean isOsAuthenticationAvailable() {
+		return Native.INSTANCE.isOsAuthenticationAvailable();
 	}
 
 	/**
@@ -116,7 +116,7 @@ class MacKeychain {
 
 		public native int deletePassword(byte[] service, byte[] account);
 
-		public native boolean isTouchIDavailable();
+		public native boolean isOsAuthenticationAvailable();
 	}
 
 }

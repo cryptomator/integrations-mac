@@ -174,13 +174,24 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
 	return status;
 }
 
-JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_isTouchIDavailable(JNIEnv *env, jobject thisObj) {
+JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_isOsAuthenticationAvailable(JNIEnv *env, jobject thisObj) {
 	NSError *error = nil;
 	LAContext *context = getSharedLAContext();
-	if ([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error]) {
-		return JNI_TRUE;
-	} else {
-		NSLog(@"Touch ID is not available: %@", error.localizedDescription);
+	// matches kSecAccessControlUserPresence, which falls back to the user's password when biometrics are unavailable:
+	if (![context canEvaluatePolicy:LAPolicyDeviceOwnerAuthentication error:&error]) {
+		NSLog(@"Device owner authentication is not available: %@", error.localizedDescription);
 		return JNI_FALSE;
 	}
+	// Protected items require the data protection keychain, which is only accessible with an entitlement granting a keychain access group.
+	// Without it, lookups merely find nothing, while deleting a never-existing item reports the missing entitlement:
+	NSDictionary *probe = @{
+		(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
+		(__bridge id)kSecAttrService: [NSUUID UUID].UUIDString,
+		(__bridge id)kSecUseDataProtectionKeychain: @YES
+	};
+	if (SecItemDelete((__bridge CFDictionaryRef)probe) == errSecMissingEntitlement) {
+		NSLog(@"Data protection keychain is not available: missing entitlement");
+		return JNI_FALSE;
+	}
+	return JNI_TRUE;
 }

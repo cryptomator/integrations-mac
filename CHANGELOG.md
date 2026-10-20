@@ -9,6 +9,7 @@ Changes to prior versions can be found on the [Github release page](https://gith
 
 ## [Unreleased](https://github.com/cryptomator/integrations-mac/compare/1.5.1...HEAD)
 ### Changed
+* Touch ID keychain falls back to the device password when biometrics are unavailable
 * Loading a stored password reports errors, e.g. cancelled authentication, instead of reporting no stored password
 * Require macOS 11
 

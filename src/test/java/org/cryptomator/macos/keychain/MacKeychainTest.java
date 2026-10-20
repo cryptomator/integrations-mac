@@ -14,6 +14,12 @@ public class MacKeychainTest {
 	private final MacKeychain keychain = new MacKeychain();
 
 	@Test
+	@DisplayName("OS authentication is unsupported without keychain-access-groups entitlement, as in this test JVM")
+	public void testOsAuthenticationWithoutEntitlement() {
+		Assertions.assertFalse(keychain.isOsAuthenticationAvailable());
+	}
+
+	@Test
 	public void testLoadResultNotFound() throws KeychainAccessException {
 		Assertions.assertNull(MacKeychain.toStoredPassword(new MacKeychain.LoadResult(-25300, null, false)));
 	}

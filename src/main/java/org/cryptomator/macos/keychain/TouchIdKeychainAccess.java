@@ -65,7 +65,7 @@ public class TouchIdKeychainAccess implements KeychainAccessProvider {
 
 	@Override
 	public boolean isSupported() {
-		return keychain.isTouchIDavailable();
+		return keychain.isOsAuthenticationAvailable();
 	}
 
 	@Override
