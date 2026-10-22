@@ -6,11 +6,14 @@ import org.cryptomator.integrations.common.Priority;
 import org.cryptomator.integrations.keychain.KeychainAccessException;
 import org.cryptomator.integrations.keychain.KeychainAccessProvider;
 
+import java.nio.CharBuffer;
+import java.util.Arrays;
+
 /**
- * Stores passwords in the macOS system keychain. Requires an authenticated user to do so.
+ * Stores passwords in the macOS system keychain, requiring an authenticated user to load them.
  * Authentication is done via TouchID or password as a fallback, when TouchID is not available.
  * <p>
- * Items are stored in the default keychain with the service name <code>Cryptomator</code>, unless configured otherwise
+ * Items are stored in the data protection keychain with the service name <code>Cryptomator</code>, unless configured otherwise
  * using the system property <code>cryptomator.integrationsMac.keychainServiceName</code>.
  */
 @Priority(1010)
@@ -37,13 +40,32 @@ public class TouchIdKeychainAccess implements KeychainAccessProvider {
 	}
 
 	@Override
-	public char[] loadPassphrase(String key) {
-		return keychain.loadPassword(SERVICE_NAME, key);
+	public char[] loadPassphrase(String key) throws KeychainAccessException {
+		var password = keychain.loadPassword(SERVICE_NAME, key);
+		if (password == null) {
+			return null;
+		} else if (password.requiresOsAuthentication()) {
+			return password.value();
+		}
+		// the entry was stored without user presence (e.g. by MacSystemKeychainAccess): protect it, then load it again through the authenticated path
+		try {
+			keychain.storePassword(SERVICE_NAME, key, CharBuffer.wrap(password.value()), true);
+		} finally {
+			Arrays.fill(password.value(), '\0');
+		}
+		var protectedPassword = keychain.loadPassword(SERVICE_NAME, key);
+		if (protectedPassword == null || !protectedPassword.requiresOsAuthentication()) {
+			if (protectedPassword != null) {
+				Arrays.fill(protectedPassword.value(), '\0');
+			}
+			throw new KeychainAccessException("Failed to protect stored passphrase with user presence");
+		}
+		return protectedPassword.value();
 	}
 
 	@Override
 	public boolean isSupported() {
-		return keychain.isTouchIDavailable();
+		return keychain.isOsAuthenticationAvailable();
 	}
 
 	@Override
