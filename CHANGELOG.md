@@ -7,7 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 The changelog starts with version 1.4.1.
 Changes to prior versions can be found on the [Github release page](https://github.com/cryptomator/integrations-mac/releases).
 
-## [Unreleased](https://github.com/cryptomator/integrations-mac/compare/1.5.1...HEAD)
+## [Unreleased](https://github.com/cryptomator/integrations-mac/compare/1.6.0...HEAD)
+
+No changes yet.
+
+
+## [1.6.0](https://github.com/cryptomator/integrations-mac/releases/tag/1.6.0) - 2026-10-23
 ### Changed
 * Touch ID keychain falls back to the device password when biometrics are unavailable ([#129](https://github.com/cryptomator/integrations-mac/pull/129))
 * Loading a stored password reports errors, e.g. cancelled authentication, instead of reporting no stored password ([#129](https://github.com/cryptomator/integrations-mac/pull/129))
