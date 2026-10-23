@@ -9,13 +9,16 @@ Changes to prior versions can be found on the [Github release page](https://gith
 
 ## [Unreleased](https://github.com/cryptomator/integrations-mac/compare/1.5.1...HEAD)
 ### Changed
-* Touch ID keychain falls back to the device password when biometrics are unavailable
-* Loading a stored password reports errors, e.g. cancelled authentication, instead of reporting no stored password
-* Require macOS 11
+* Touch ID keychain falls back to the device password when biometrics are unavailable ([#129](https://github.com/cryptomator/integrations-mac/pull/129))
+* Loading a stored password reports errors, e.g. cancelled authentication, instead of reporting no stored password ([#129](https://github.com/cryptomator/integrations-mac/pull/129))
+* Require macOS 11 ([#129](https://github.com/cryptomator/integrations-mac/pull/129))
+
+### Removed
+* Migration of keychain entries stored under the legacy service name `Cryptomator\0` ([#129](https://github.com/cryptomator/integrations-mac/pull/129))
 
 ### Fixed
-* Touch ID keychain entries that were stored without authentication are now protected when loaded
-* Possible out-of-bounds read when converting keychain service and account names
+* Touch ID keychain entries that were stored without authentication are now protected when loaded/saved ([#129](https://github.com/cryptomator/integrations-mac/pull/129))
+* Possible out-of-bounds read when converting keychain service and account names ([#129](https://github.com/cryptomator/integrations-mac/pull/129))
 
 
 ## [1.5.1](https://github.com/cryptomator/integrations-mac/releases/tag/1.5.1) - 2026-10-06
