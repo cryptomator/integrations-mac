@@ -18,9 +18,9 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
 /*
  * Class:     org_cryptomator_macos_keychain_MacKeychain_Native
  * Method:    loadPassword
- * Signature: ([B[B)[B
+ * Signature: ([B[B)Lorg/cryptomator/macos/keychain/MacKeychain/LoadResult;
  */
-JNIEXPORT jbyteArray JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_loadPassword
+JNIEXPORT jobject JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_loadPassword
   (JNIEnv *, jobject, jbyteArray, jbyteArray);
 
 /*
@@ -33,10 +33,10 @@ JNIEXPORT jint JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Nati
 
 /*
  * Class:     org_cryptomator_macos_keychain_MacKeychain_Native
- * Method:    isTouchIDavailable
+ * Method:    isOsAuthenticationAvailable
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_isTouchIDavailable
+JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_keychain_MacKeychain_00024Native_isOsAuthenticationAvailable
   (JNIEnv *, jobject);
 
 #ifdef __cplusplus
