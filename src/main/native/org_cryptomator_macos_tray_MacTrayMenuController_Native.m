@@ -53,12 +53,15 @@ NS_RETURNS_RETAINED static NSString *newStringFromJava(JNIEnv *env, jstring str)
 	if (str == NULL) {
 		return nil;
 	}
-	const char *chars = (*env)->GetStringUTFChars(env, str, NULL);
+	// UTF-16 rather than GetStringUTFChars, whose modified UTF-8 encodes supplementary
+	// characters (e.g. emoji) as surrogate pairs that initWithUTF8String: rejects.
+	jsize len = (*env)->GetStringLength(env, str);
+	const jchar *chars = (*env)->GetStringChars(env, str, NULL);
 	if (chars == NULL) {
 		return nil;
 	}
-	NSString *result = [[NSString alloc] initWithUTF8String:chars];
-	(*env)->ReleaseStringUTFChars(env, str, chars);
+	NSString *result = [[NSString alloc] initWithCharacters:(const unichar *)chars length:len];
+	(*env)->ReleaseStringChars(env, str, chars);
 	return result;
 }
 
