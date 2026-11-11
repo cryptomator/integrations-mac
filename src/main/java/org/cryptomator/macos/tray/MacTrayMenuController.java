@@ -91,16 +91,20 @@ public class MacTrayMenuController implements TrayMenuController {
 	}
 
 	private static void runOnMainThread(Runnable task) {
-		var failure = new AtomicReference<RuntimeException>();
+		// Errors are captured too, since the native side would otherwise print and clear them.
+		var failure = new AtomicReference<Throwable>();
 		Native.INSTANCE.runOnMainThread(() -> {
 			try {
 				task.run();
-			} catch (RuntimeException e) {
+			} catch (RuntimeException | Error e) {
 				failure.set(e);
 			}
 		});
-		if (failure.get() != null) {
-			throw failure.get();
+		switch (failure.get()) {
+			case null -> {}
+			case RuntimeException e -> throw e;
+			case Error e -> throw e;
+			default -> throw new IllegalStateException("Unexpected checked exception", failure.get());
 		}
 	}
 
