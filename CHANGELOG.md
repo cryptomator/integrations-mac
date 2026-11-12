@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 The changelog starts with version 1.4.1.
 Changes to prior versions can be found on the [Github release page](https://github.com/cryptomator/integrations-mac/releases).
 
+## [1.7.0](https://github.com/cryptomator/integrations-mac/releases/tag/1.7.0) - 2026-11-12
+### Added
++ Native macOS implementation of the `TrayMenuController` API ([#135](https://github.com/cryptomator/integrations-mac/pull/135))
+
+### Changed
+* Display name of the DMG update mechanism is now "Download and install"
+* Updated dependencies
+  - `org.cryptomator:integrations-api` from 1.9.1 to 1.10.1
+
+
 ## [1.6.0](https://github.com/cryptomator/integrations-mac/releases/tag/1.6.0) - 2026-10-23
 ### Changed
 * Touch ID keychain falls back to the device password when biometrics are unavailable ([#129](https://github.com/cryptomator/integrations-mac/pull/129))
@@ -32,7 +42,6 @@ Changes to prior versions can be found on the [Github release page](https://gith
 
 
 ## [1.5.0](https://github.com/cryptomator/integrations-mac/releases/1.5.0)
-
 ### Added
 + DMG Update Mechanism ([#92](https://github.com/cryptomator/integrations-mac/pull/92))
 
