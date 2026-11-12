@@ -9,7 +9,13 @@ Changes to prior versions can be found on the [Github release page](https://gith
 
 ## [Unreleased](https://github.com/cryptomator/integrations-mac/compare/1.6.0...HEAD)
 
-No changes yet.
+### Added
++ Native macOS implementation of the `TrayMenuController` API ([#135](https://github.com/cryptomator/integrations-mac/pull/135))
+
+### Changed
+* Display name of the DMG update mechanism is now "Download and install"
+* Updated dependencies
+  - `org.cryptomator:integrations-api` from 1.9.1 to 1.10.1
 
 
 ## [1.6.0](https://github.com/cryptomator/integrations-mac/releases/tag/1.6.0) - 2026-10-23
