@@ -79,6 +79,25 @@ NS_RETURNS_RETAINED static NSData *newDataFromJava(JNIEnv *env, jbyteArray array
 	return result;
 }
 
+// 16 pt matches the glyph height of other menu bar items. The status item has a
+// variable length, so its width follows the image's aspect ratio.
+NS_RETURNS_RETAINED static NSImage *newTrayImage(NSData *imageData) {
+	NSImage *image = imageData != nil ? [[NSImage alloc] initWithData:imageData] : nil;
+	if (image == nil) {
+		return nil;
+	}
+	NSSize size = image.size;
+	if (size.width <= 0 || size.height <= 0) {
+		return nil;
+	}
+	CGFloat iconHeight = 16.0;
+	// Whole points keep the image pixel-aligned in the status bar button.
+	CGFloat iconWidth = MAX(1.0, round(iconHeight * size.width / size.height));
+	image.size = NSMakeSize(iconWidth, iconHeight);
+	image.template = YES;
+	return image;
+}
+
 // Synchronous, so calls keep their order and addSubMenuItem can return its handle.
 // Callers must not hold a lock that the main thread may be waiting for.
 static void runOnMainThread(dispatch_block_t block) {
@@ -196,17 +215,15 @@ JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_tray_MacTrayMenuController
 
 	runOnMainThread(^{
 		@autoreleasepool { // systemStatusBar and statusItemWithLength: return autoreleased objects
-			NSImage *image = imageData != nil ? [[NSImage alloc] initWithData:imageData] : nil;
+			NSImage *image = newTrayImage(imageData);
 			if (image == nil) {
 				return;
 			}
-			image.size = NSMakeSize(18, 18);
-			image.template = YES;
 
 			if (gStatusItem != nil) {
 				[[NSStatusBar systemStatusBar] removeStatusItem:gStatusItem];
 			}
-			gStatusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSSquareStatusItemLength];
+			gStatusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
 			gStatusItem.button.image = image;
 			gStatusItem.button.toolTip = tooltipStr;
 			gStatusItem.menu = rootMenu();
@@ -222,12 +239,10 @@ JNIEXPORT jboolean JNICALL Java_org_cryptomator_macos_tray_MacTrayMenuController
 	__block BOOL success = NO;
 
 	runOnMainThread(^{
-		NSImage *image = imageData != nil ? [[NSImage alloc] initWithData:imageData] : nil;
+		NSImage *image = newTrayImage(imageData);
 		if (image == nil || gStatusItem == nil) {
 			return;
 		}
-		image.size = NSMakeSize(18, 18);
-		image.template = YES;
 		gStatusItem.button.image = image;
 		success = YES;
 	});
