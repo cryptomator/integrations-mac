@@ -91,7 +91,9 @@ NS_RETURNS_RETAINED static NSImage *newTrayImage(NSData *imageData) {
 		return nil;
 	}
 	CGFloat iconHeight = 16.0;
-	image.size = NSMakeSize(round(iconHeight * size.width / size.height), iconHeight);
+	// Whole points keep the image pixel-aligned in the status bar button.
+	CGFloat iconWidth = MAX(1.0, round(iconHeight * size.width / size.height));
+	image.size = NSMakeSize(iconWidth, iconHeight);
 	image.template = YES;
 	return image;
 }
