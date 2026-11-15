@@ -9,7 +9,7 @@ Changes to prior versions can be found on the [Github release page](https://gith
 
 ## [Unreleased](https://github.com/cryptomator/integrations-mac/compare/1.7.0...HEAD)
 ### Fixed
-* Tray icon keeps its aspect ratio and matches the size of other menu bar items
+* Tray icon keeps its aspect ratio and matches the size of other menu bar items ([#136](https://github.com/cryptomator/integrations-mac/pull/136))
 
 
 ## [1.7.0](https://github.com/cryptomator/integrations-mac/releases/tag/1.7.0) - 2026-11-12
